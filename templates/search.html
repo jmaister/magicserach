@@ -13,7 +13,11 @@
 
     <h2>Search form</h2>
     <form method="POST" action="/search" >
-      <div>Name (partial): <input name="cardname" placeholder="Card name" /> </div>
+      <div>Name (partial): <input name="cardname" placeholder="Card name" value="{{ request.form['cardname'] }}" /> </div>
+      <div>Label: <select name="label">
+        <option value="" {% if request.form['label'] == '' %} selected="selected"{% endif %}> - empty -</option>
+        <option value="ON_ENTER" {% if request.form['label'] == 'ON_ENTER' %} selected="selected"{% endif %}>On enter the battlefield</option>
+      </select> </div>
       <button type="submit">Search</button>
     </form>
 

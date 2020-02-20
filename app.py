@@ -19,13 +19,16 @@ def get_search():
     cur = conn.cursor()
 
     cardname = "%"
+    label = "%"
     if request.method == 'POST':
         cardname = "%" + request.form['cardname'] + "%"
+        label = "%" + request.form['label'] + "%"
 
     cur.execute("""SELECT * FROM cards AS c, cardlabels AS cl
-        WHERE lower(name) like lower(?)
-        AND c.uuid = cl.uuid
-    """, [cardname])
+        WHERE c.uuid = cl.uuid
+        AND lower(c.name) like lower(?)
+        AND lower(cl.labels) like lower(?)
+    """, [cardname, label])
     rows = cur.fetchall()
     return render_template('search.html', rows=rows)
 
