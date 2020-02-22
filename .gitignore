@@ -1,4 +1,6 @@
 AllPrintings.sqlite
 StandardCards.json
+card_labels.json
+cards.sqlite
 
 __pycache__/*
