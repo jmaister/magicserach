@@ -9,7 +9,6 @@ from spacy.pipeline import EntityRuler
 from spacy.matcher import Matcher
 
 
-
 patterns = [
     
     {"label": "ON_DRAW_CARD,1", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
@@ -18,7 +17,7 @@ patterns = [
     {"label": "DRAW_CARD,1", "pattern": [{"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
     {"label": "DRAW_CARD,n", "pattern": [{"LEMMA": "draw"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
 
-    {"label": "ON_DISCARD_CARD", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
+    {"label": "ON_DISCARD_CARD", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "discard"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
     {"label": "DISCARD_CARD,1", "pattern": [{"LEMMA": "discard"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
     {"label": "DISCARD_CARD,2", "pattern": [{"LEMMA": "discard"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
 
@@ -212,3 +211,6 @@ def run():
     import json
     with open('card_labels.json', 'w') as f:
         json.dump(output_data, f)
+
+def analize(uuid):
+    return "abc"

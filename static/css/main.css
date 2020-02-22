@@ -4,6 +4,9 @@
     width: 15px;
 }
 
+.cardname {
+    font-weight: bold;
+}
 .cardtext {
     white-space: pre-line;
     padding: 5px;
