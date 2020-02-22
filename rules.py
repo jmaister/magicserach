@@ -95,13 +95,19 @@ def create_table(conn):
     conn.execute("""DROP TABLE cardlabels""")
     conn.execute("""CREATE TABLE cardlabels (
         uuid TEXT,
-        labels TEXT
+        labels TEXT,
+        PRIMARY KEY(`uuid`)
     ) """)
 
 def insert(conn, uuid, labels):
     conn.execute("""
     INSERT INTO cardlabels VALUES (?,?)
     """, [uuid, labels])
+
+def clean_label(label):
+    if label.endswith("_1") or label.endswith("_n"):
+        return label[:-2]
+    return label
 
 def run(n):
     import json
@@ -141,7 +147,7 @@ def run(n):
             doc = nlp(t)
 
             #print("----------------------------")
-            labels = set([ent.label_ for ent in doc.ents])
+            labels = set([clean_label(ent.label_) for ent in doc.ents])
             labelsStr = ', '.join(str(e) for e in labels)
             #print("*** " + card["name"] + " *** " + labelsStr)
             #print("text:", t)

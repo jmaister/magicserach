@@ -17,13 +17,30 @@
       <div>Label: <select name="label">
         <option value="" {% if request.form['label'] == '' %} selected="selected"{% endif %}> - empty -</option>
         <option value="ON_ENTER" {% if request.form['label'] == 'ON_ENTER' %} selected="selected"{% endif %}>On enter the battlefield</option>
+        <option value="DRAW_CARD" {% if request.form['label'] == 'DRAW_CARD' %} selected="selected"{% endif %}>Draw card</option>
+        <option value="ON_DRAW_CARD" {% if request.form['label'] == 'ON_DRAW_CARD' %} selected="selected"{% endif %}>Whenever you draw card</option>
       </select> </div>
+      <div>
+        <h3>Color</h3>
+        <div>
+          <select name="colormode">
+            <option value="any" {% if request.form['label'] == 'any' %} selected="selected"{% endif %}>Any of these colors</option>
+            <option value="all" {% if request.form['label'] == 'all' %} selected="selected"{% endif %}>All of these colors</option>
+          </select>
+        </div>
+        <div>Red: <input type="checkbox" name="color_R" {% if request.form['color_R'] == 'on' %} checked {% endif %}/></div>
+        <div>Blue: <input type="checkbox" name="color_U" {% if request.form['color_U'] == 'on' %} checked {% endif %}/></div>
+        <div>Green: <input type="checkbox" name="color_G" {% if request.form['color_G'] == 'on' %} checked {% endif %}/></div>
+        <div>White: <input type="checkbox" name="color_W" {% if request.form['color_W'] == 'on' %} checked {% endif %}/></div>
+        <div>Black: <input type="checkbox" name="color_B" {% if request.form['color_B'] == 'on' %} checked {% endif %}/></div>
+        <div>Uncolored: <input type="checkbox" name="color_NULL" {% if request.form['color_NULL'] == 'on' %} checked {% endif %}/></div>
+      </div>
       <button type="submit">Search</button>
     </form>
 
-    <h3>Results:</h3>
+    <h3>{{rows.length}} Results:</h3>
     {% for row in rows %}
-      <div>{{row['uuid']}}, {{row['name']}}, {{row['labels']}}</div>
+      <div>{{row['uuid']}}, {{row['name']}}, {{row['colors']}}, {{row['labels']}}</div>
     {% endfor%}
 </body>
 </html>
