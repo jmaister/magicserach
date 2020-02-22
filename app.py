@@ -4,28 +4,10 @@ app = Flask(__name__,
             static_url_path='',
             static_folder='./static')
 
-import sqlite3
-
+import database
 import rules
-from rules import run
 
 import time
-
-def connect_db():
-    """Connects to the specific database."""
-    conn = sqlite3.connect('./cards.sqlite')
-    conn.execute("ATTACH DATABASE 'AllPrintings.sqlite' AS AllPrintings")
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
-def get_db():
-    """Opens a new database connection if there is none yet for the
-     current application context.
-    """
-    if not hasattr(g, 'sqlite_db'):
-        g.sqlite_db = connect_db()
-    return g.sqlite_db
 
 
 @app.route("/")
@@ -35,7 +17,7 @@ def main():
 
 @app.route("/search", methods = ['GET', 'POST'])
 def get_search():
-    conn = get_db()
+    conn = database.get_db(g)
     cur = conn.cursor()
 
     sql = """SELECT * FROM cards AS c, cardlabels AS cl
@@ -106,9 +88,18 @@ def get_search():
 @app.route("/runrules")
 def run_rules():
     start_time = time.time()
-    run()
+
+    conn = database.get_db(g)
+    rules.run(conn)
+
     elapsed_time = time.time() - start_time
     return "OK "+ str(elapsed_time)
+
+@app.route("/analize/<uuid>")
+def analize_uuid(uuid):
+    conn = database.get_db(g)
+    analysis = rules.analize(conn, uuid)
+    return render_template('analysis.html', analysis=analysis)
 
 if __name__ == "__main__":
     app.config['TEMPLATES_AUTO_RELOAD'] = True

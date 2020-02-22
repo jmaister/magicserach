@@ -1,4 +1,3 @@
-import json
 
 import spacy
 from spacy import displacy
@@ -115,7 +114,7 @@ def to_integer(t):
         return t
 
 def create_table(conn):
-    conn.execute("""DROP TABLE cardlabels""")
+    conn.execute("""DROP TABLE IF EXISTS cardlabels""")
     conn.execute("""CREATE TABLE cardlabels (
         uuid TEXT,
         labels TEXT,
@@ -124,7 +123,7 @@ def create_table(conn):
 
 def insert(conn, uuid, labels):
     conn.execute("""
-    INSERT INTO cardlabels VALUES (?,?)
+    INSERT INTO cardlabels (uuid, labels) VALUES (?,?)
     """, [uuid, labels])
 
 def clean_label(label):
@@ -133,14 +132,11 @@ def clean_label(label):
         return label[0:pos]
     return label
 
-def run():
+def run(conn):
     import json
-    import sqlite3
+
     with open("StandardCards.json") as datafile:
         data = json.load(datafile)
-
-    conn = sqlite3.connect('./cards.sqlite')
-    conn.execute("ATTACH DATABASE 'AllPrintings.sqlite' AS AllPrintings")
 
     create_table(conn)
 
@@ -151,16 +147,11 @@ def run():
 
     nlp.add_pipe(ruler)
 
-    print("**")
-
-    import datetime
-    print(datetime.datetime.now())
-
     output_data = []
 
     cur = conn.cursor()
 
-    for cardKey in list(data.keys()):
+    for cardKey in list(data.keys())[:10]:
         card = data[cardKey]
         if 'text' in card:
             name = card['name']
@@ -206,11 +197,8 @@ def run():
     conn.commit()
     conn.close()
 
-    print(datetime.datetime.now())
-
-    import json
     with open('card_labels.json', 'w') as f:
         json.dump(output_data, f)
 
-def analize(uuid):
+def analize(conn, uuid):
     return "abc"
