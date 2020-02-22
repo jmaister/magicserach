@@ -1,25 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Magic Search</title>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
-</head>
-<body>
-    <h1>MagicSearch Search</h1>
+{% block content %}
+    <h1>Magic Search</h1>
 
     <h2>Search form</h2>
     <form method="POST" action="/search" >
       <div>Name (partial): <input name="cardname" placeholder="Card name" value="{{ request.form['cardname'] }}" /> </div>
-      <div>Label: <select name="label">
-        <option value="" {% if request.form['label'] == '' %} selected="selected"{% endif %}> - empty -</option>
-        <option value="ON_ENTER" {% if request.form['label'] == 'ON_ENTER' %} selected="selected"{% endif %}>On enter the battlefield</option>
-        <option value="DRAW_CARD" {% if request.form['label'] == 'DRAW_CARD' %} selected="selected"{% endif %}>Draw card</option>
-        <option value="ON_DRAW_CARD" {% if request.form['label'] == 'ON_DRAW_CARD' %} selected="selected"{% endif %}>Whenever you draw card</option>
-      </select> </div>
+      <div>Card trigger:
+        <select name="trigger">
+          <option value="" {% if request.form['trigger'] == '' %} selected="selected"{% endif %}> - empty -</option>
+          {% for tr in data.triggers|sort %}
+          <option value="{{tr}}" {% if request.form['trigger'] == tr %} selected="selected"{% endif %}>{{tr}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>Card effect:
+        <select name="effect">
+          <option value="" {% if request.form['effect'] == '' %} selected="selected"{% endif %}> - empty -</option>
+          {% for tr in data.effects|sort %}
+          <option value="{{tr}}" {% if request.form['effect'] == tr %} selected="selected"{% endif %}>{{tr}}</option>
+          {% endfor %}
+        </select>
+      </div>
       <div>
         <h3>Color</h3>
         <div>
@@ -40,8 +42,23 @@
 
     <h3>{{rows.length}} Results:</h3>
     {% for row in rows %}
-      <div>{{row['uuid']}}, {{row['name']}}, {{row['colors']}}, {{row['labels']}}</div>
+    <div class="pure-g" id="{{row['uuid']}}">
+      <div class="pure-u-2-5">{{row['name']}}</div>
+      <div class="pure-u-1-5">
+        Colors: [
+        {% if row['colors'] != None %}
+          {% set colorlist = row['colors'].split(',') %}
+          {% for c in colorlist %}
+            <img class="icon" src="img/{{c}}.svg" >
+          {% endfor %}
+        {% else %}
+          <img class="icon" src="img/C.svg" >
+        {% endif %}
+        ]
+      </div>
+      <div class="pure-u-2-5">{{row['labels']}}</div>
+      <div class="pure-u-1  cardtext">{{row['text']}}</div>
+    </div>
     {% endfor%}
-</body>
-</html>
 
+{% endblock %}

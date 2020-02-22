@@ -12,27 +12,26 @@ from spacy.matcher import Matcher
 
 patterns = [
     
-    {"label": "ON_DRAW_CARD", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
-    {"label": "ON_DRAW_CARD_2", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "second"}, {"LEMMA": "card"}]},
+    {"label": "ON_DRAW_CARD,1", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
+    {"label": "ON_DRAW_CARD,2", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "second"}, {"LEMMA": "card"}]},
     
-    {"label": "DRAW_CARD_1", "pattern": [{"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
-    {"label": "DRAW_CARD_n", "pattern": [{"LEMMA": "draw"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
+    {"label": "DRAW_CARD,1", "pattern": [{"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
+    {"label": "DRAW_CARD,n", "pattern": [{"LEMMA": "draw"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
 
     {"label": "ON_DISCARD_CARD", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
-    {"label": "DISCARD_CARD_1", "pattern": [{"LEMMA": "discard"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
-    {"label": "DISCARD_CARD_n", "pattern": [{"LEMMA": "discard"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
+    {"label": "DISCARD_CARD,1", "pattern": [{"LEMMA": "discard"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
+    {"label": "DISCARD_CARD,2", "pattern": [{"LEMMA": "discard"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
 
     {"label": "ON_DAMAGE", "pattern": [{"LEMMA": "whenever"}, {"ORTH": "/name/"}, {"LEMMA": "deal"}, {"LEMMA": "damage"}]},
     {"label": "ON_ATTACK", "pattern": [{"LEMMA": "whenever"}, {"ORTH": "/name/"}, {"LEMMA": "attack"}]},
     {"label": "ON_ENTER", "pattern": [{"LEMMA": "when"}, {"ORTH": "/name/"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
-    {"label": "ON_DIE", "pattern": [{"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
-    {"label": "ON_DIE", "pattern": [{"LEMMA": "whenever"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
+    {"label": "ON_DIE,1", "pattern": [{"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
+    {"label": "ON_DIE,2", "pattern": [{"LEMMA": "whenever"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
 
     {"label": "DAMAGE_OWN", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "you"}]},
     {"label": "DAMAGE_ALL", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "each"}, {"LEMMA": "player"}]},
     {"label": "DAMAGE_OPPONENT", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "each"}, {"LEMMA": "opponent"}]},
     {"label": "DAMAGE_ANY", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "any"}, {"LEMMA": "target"}]},
-    #{"label": "DAMAGE_CREATURE", "pattern": [{"LEMMA": "deal"}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "target"}, {"LEMMA": "creature"} ]},
     {"label": "DAMAGE_CREATURE", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "target"}, {"LEMMA": "creature"}], "nums": [1] },
     
     {"label": "ON_LIFE_GAIN", "pattern": [{"LEMMA": "wenever"}, {"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "life"}]},
@@ -45,11 +44,36 @@ patterns = [
 
     {"label": "DEVOTION_RED", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "red"}]},
 
-    {"label": "CREATE_TOKEN", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
-    {"label": "CREATE_TOKEN", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
+    {"label": "CREATE_TOKEN,1", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
+    {"label": "CREATE_TOKEN,2", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
+
+    {"label": "CREATE_FOOD_TOKEN,1", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LOWER": "food"}, {"LEMMA": "token"}]},
+    {"label": "CREATE_FOOD_TOKEN,2", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LEMMA": "number"}, {"LEMMA": "of"}, {"LOWER": "food"}, {"LEMMA": "token"}]},
+    {"label": "CREATE_FOOD_TOKEN,3", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LOWER": "food"}, {"LEMMA": "token"}]},
 
     {"label": "GRAVEYARD_TO_LIBRARY", "pattern": [{"LEMMA": "from"}, {"LOWER": "your"}, {"LEMMA": "graveyard"}, {"LEMMA": "on"}, {"LEMMA": "top"}, {"LEMMA": "of"}, {"LOWER": "your"}, {"LEMMA": "library"},]},
 ]
+
+def get_labels():
+    labels = set()
+    for pattern in patterns:
+        cl = clean_label(pattern["label"])
+        labels.add(cl)
+    return labels
+
+def get_trigger_labels():
+    triggers = set()
+    for label in get_labels():
+        if label.startswith('ON_'):
+            triggers.add(label)
+    return triggers
+
+def get_effect_labels():
+    effects = set()
+    for label in get_labels():
+        if not label.startswith('ON_'):
+            effects.add(label)
+    return effects
 
 def get_pattern(label):
     for pattern in patterns:
@@ -105,16 +129,16 @@ def insert(conn, uuid, labels):
     """, [uuid, labels])
 
 def clean_label(label):
-    if label.endswith("_1") or label.endswith("_n"):
-        return label[:-2]
+    pos = label.find(',')
+    if pos > 0:
+        return label[0:pos]
     return label
 
-def run(n):
+def run():
     import json
     import sqlite3
     with open("StandardCards.json") as datafile:
         data = json.load(datafile)
-
 
     conn = sqlite3.connect('./cards.sqlite')
     conn.execute("ATTACH DATABASE 'AllPrintings.sqlite' AS AllPrintings")
@@ -137,8 +161,7 @@ def run(n):
 
     cur = conn.cursor()
 
-    #for cardKey in list(data.keys())[:n]:
-    for cardKey in list(data.keys())[:]:
+    for cardKey in list(data.keys()):
         card = data[cardKey]
         if 'text' in card:
             name = card['name']

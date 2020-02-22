@@ -1,11 +1,15 @@
 from flask import Flask, render_template, g
 from flask import request
-app = Flask(__name__)
+app = Flask(__name__,
+            static_url_path='',
+            static_folder='./static')
 
 import sqlite3
 
 import rules
 from rules import run
+
+import time
 
 def connect_db():
     """Connects to the specific database."""
@@ -42,9 +46,12 @@ def get_search():
         if 'cardname' in request.form and request.form['cardname'] != "":
             sql += "AND lower(c.name) like lower(?) "
             params.append('%' + request.form['cardname'] + '%')
-        if 'label' in request.form and request.form['label'] != "":
+        if 'trigger' in request.form and request.form['trigger'] != "":
             sql += "AND lower(cl.labels) like lower(?) "
-            params.append('%' + request.form['label'] + '%')
+            params.append('%' + request.form['trigger'] + '%')
+        if 'effect' in request.form and request.form['effect'] != "":
+            sql += "AND lower(cl.labels) like lower(?) "
+            params.append('%' + request.form['effect'] + '%')
 
         if 'colormode' in request.form:
             colormode = request.form['colormode']
@@ -87,12 +94,21 @@ def get_search():
     app.logger.info("params: [%s]", params)
     cur.execute(sql, params)
     rows = cur.fetchall()
-    return render_template('search.html', rows=rows)
+
+    data = {
+        "labels": rules.get_labels(),
+        "triggers": rules.get_trigger_labels(),
+        "effects": rules.get_effect_labels()
+    }
+
+    return render_template('search.html', rows=rows, data=data)
 
 @app.route("/runrules")
 def run_rules():
-    run(5)
-    return "OK"
+    start_time = time.time()
+    run()
+    elapsed_time = time.time() - start_time
+    return "OK "+ str(elapsed_time)
 
 if __name__ == "__main__":
     app.config['TEMPLATES_AUTO_RELOAD'] = True

@@ -1,0 +1,19 @@
+
+.icon {
+    height: 15px;
+    width: 15px;
+}
+
+.cardtext {
+    white-space: pre-line;
+    padding: 5px;
+    margin: 10px;
+    border: 1px dashed black;
+}
+
+.pure-g {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid black;
+}
