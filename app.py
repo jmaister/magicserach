@@ -1,8 +1,12 @@
 from flask import Flask, render_template, g
 from flask import request
+
 app = Flask(__name__,
             static_url_path='',
             static_folder='./static')
+
+from flask_compress import Compress
+Compress(app)
 
 import database
 import rules
@@ -98,7 +102,7 @@ def run_rules():
 @app.route("/analize/<uuid>")
 def analize_uuid(uuid):
     conn = database.get_db(g)
-    analysis = rules.analize(conn, uuid)
+    analysis = rules.analize(app, conn, uuid)
     return render_template('analysis.html', analysis=analysis)
 
 if __name__ == "__main__":
