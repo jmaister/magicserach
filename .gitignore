@@ -4,3 +4,6 @@ card_labels.json
 cards.sqlite
 
 __pycache__/*
+
+# pip environment
+/magicsearch
