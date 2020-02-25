@@ -16,13 +16,22 @@ import time
 
 @app.route("/")
 def main():
-    #return "Welcome!"
     return render_template('index.html')
 
 @app.route("/search", methods = ['GET', 'POST'])
 def get_search():
     conn = database.get_db(g)
-    cur = conn.cursor()
+
+    import json
+    searchstr = json.dumps(request.form)
+    app.logger.info("Search [%s]", searchstr)
+
+    conn.execute("""
+        INSERT INTO history (data, type, remote_addr, url)
+        VALUES (?, ?, ?, ?)
+    """, [searchstr, "SEARCH", request.remote_addr, request.url])
+    conn.commit()
+
 
     sql = """SELECT * FROM cards AS c, cardlabels AS cl
              WHERE c.uuid = cl.uuid """
@@ -81,6 +90,7 @@ def get_search():
 
     app.logger.info("sql: [%s]", sql)
     app.logger.info("params: [%s]", params)
+    cur = conn.cursor()
     cur.execute(sql, params)
     rows = cur.fetchall()
 
@@ -102,11 +112,32 @@ def run_rules():
     elapsed_time = time.time() - start_time
     return "OK "+ str(elapsed_time)
 
+@app.route("/setup")
+def setup():
+    start_time = time.time()
+
+    conn = database.get_db(g)
+    conn.execute("""CREATE TABLE IF NOT EXISTS history (
+        dt datetime default current_timestamp,
+        data TEXT,
+        type TEXT,
+        remote_addr TEXT,
+        url TEXT
+    ) """)
+
+
+    elapsed_time = time.time() - start_time
+    return "OK "+ str(elapsed_time)
+
 @app.route("/analize/<uuid>")
 def analize_uuid(uuid):
     conn = database.get_db(g)
     analysis = rules.analize(app, conn, uuid)
     return render_template('analysis.html', analysis=analysis)
+
+def save_search_history(conn, search):
+    pass
+
 
 if __name__ == "__main__":
     app.config['TEMPLATES_AUTO_RELOAD'] = True
