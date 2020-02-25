@@ -5,23 +5,22 @@
 
     <h2>Card Analysis</h2>
 
-    {% for a in analysis %}
-        <p><b>Name:</b> {{a.card['name']}}</p>
-        <p><b>Text:</b> {{a.card['text']}}</p>
-        <div class="words">
-        {% for t in a.doc %}
-            <span class="word">
-                <div class="text">{{t.text}}</div>
-                <div class="field lower">{{t.lower}}</div>
-                <div class="field lemma">{{t.lemma}}</div>
-                <div class="field like_num">{{t.like_num}}</div>
-                <div class="pos">{{t.pos}}</div>
-                <div class="dep">{{t.dep}}</div>
-                <div class="field ent_type">{{t.ent_type}}</div>
-            </span>
-        {% endfor %}
-        </div>
+    <p><b>Name:</b> {{analysis.card['name']}}</p>
+    <p><b>Text:</b> {{analysis.card['text']}}</p>
+    <p><b>TAGS:</b> {{analysis.labels}}</p>
+    <div class="words">
+    {% for t in analysis.doc %}
+        <span class="word">
+            <div class="text">{{t.text}}</div>
+            <div class="field lower">{{t.lower}}</div>
+            <div class="field lemma">{{t.lemma}}</div>
+            <div class="field like_num">{{t.like_num}}</div>
+            <div class="pos">{{t.pos}}</div>
+            <div class="dep">{{t.dep}}</div>
+            <div class="field ent_type">{{t.ent_type}}</div>
+        </span>
     {% endfor %}
+    </div>
 
     <h2>Legend</h2>
     <div class="words">
@@ -37,7 +36,18 @@
     </div>
     <p>/name/: Name of the card</p>
 
-    <p>Debug</p>
+    <!--
+    <h2>Debug</h2>
+    <table>
+    {% for k in analysis.card.keys() %}
+        <tr>
+            <td>{{k}}</td>
+            <td>{{analysis.card[k]}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
     <p>{{analysis}}</p>
+    -->
 
 {% endblock %}

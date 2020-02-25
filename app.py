@@ -32,6 +32,9 @@ def get_search():
         if 'cardname' in request.form and request.form['cardname'] != "":
             sql += "AND lower(c.name) like lower(?) "
             params.append('%' + request.form['cardname'] + '%')
+        if 'text' in request.form and request.form['text'] != "":
+            sql += "AND lower(c.text) like lower(?) "
+            params.append('%' + request.form['text'] + '%')
         if 'trigger' in request.form and request.form['trigger'] != "":
             sql += "AND lower(cl.labels) like lower(?) "
             params.append('%' + request.form['trigger'] + '%')

@@ -25,6 +25,8 @@ patterns = [
     {"label": "ON_DIE,1", "pattern": [{"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
     {"label": "ON_DIE,2", "pattern": [{"LEMMA": "whenever"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
 
+    {"label": "ON_CREATURE_ENTER,1", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "another"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
+
     {"label": "DAMAGE_OWN", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "you"}]},
     {"label": "DAMAGE_ALL", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "each"}, {"LEMMA": "player"}]},
     {"label": "DAMAGE_OPPONENT", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "each"}, {"LEMMA": "opponent"}]},
@@ -40,6 +42,12 @@ patterns = [
     {"label": "SCRY_TOP", "pattern": [{"LEMMA": "look"}, {"LEMMA": "at"}, {"LEMMA": "the"}, {"LEMMA": "top"}, {"LIKE_NUM": True}, {"LEMMA": "card"}, {"LEMMA": "of"}, {"LOWER": "your"}, {"LEMMA": "library"}]},
 
     {"label": "DEVOTION_RED", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "red"}]},
+    {"label": "DEVOTION_BLACK", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "black"}]},
+    {"label": "DEVOTION_BLUE", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "blue"}]},
+    {"label": "DEVOTION_WHITE", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "white"}]},
+    {"label": "DEVOTION_GREEN", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "green"}]},
+    # TODO: devotion to more than one color
+    # TODO: remove "devotion" explanation
 
     {"label": "CREATE_TOKEN,1", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
     {"label": "CREATE_TOKEN,2", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
@@ -49,6 +57,12 @@ patterns = [
     {"label": "CREATE_FOOD_TOKEN,3", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LOWER": "food"}, {"LEMMA": "token"}]},
 
     {"label": "GRAVEYARD_TO_LIBRARY", "pattern": [{"LEMMA": "from"}, {"LOWER": "your"}, {"LEMMA": "graveyard"}, {"LEMMA": "on"}, {"LEMMA": "top"}, {"LEMMA": "of"}, {"LOWER": "your"}, {"LEMMA": "library"},]},
+
+    {"label": "RIOT", "pattern": [{"LEMMA": "riot"}]},
+    {"label": "FLYING", "pattern": [{"LOWER": "flying"}]},
+    {"label": "FLASH", "pattern": [{"LOWER": "flash"}]},
+
+    {"label": "ENTERS_TAPPED", "pattern": [{"ORTH": "/name/"}, {"LEMMA": "enters"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}, {"LEMMA": "tap"}]},
 ]
 
 def get_labels():
@@ -205,6 +219,7 @@ def analize(app, conn, uuid):
     cur = conn.cursor()
     cur.execute("SELECT * FROM cards WHERE uuid = ?", [uuid])
     cards = cur.fetchall()
+    card = cards[0]
 
     # Disable 'ner' to remove default Named-Entity Recognition
     nlp = spacy.load('en_core_web_sm', disable=['ner'])
@@ -212,33 +227,36 @@ def analize(app, conn, uuid):
     ruler.add_patterns(patterns)
     nlp.add_pipe(ruler)
 
-    results = []
-    for card in cards:
-        name = card['name']
-        t = card['text']
-        t = t.replace(name, '/name/')
-        doc = nlp(t)
 
-        tokens = []
-        for token in doc:
-            # app.logger.info("token: [%s]", token)
-            # https://spacy.io/api/token#attributes
-            token = {
-                "text": token.text,
-                "lemma": token.lemma_,
-                "norm": token.norm_,
-                "lower": token.lower_,
-                "like_num": token.like_num,
-                "pos": token.pos_,
-                "dep": token.dep_,
-                "ent_type": clean_label(token.ent_type_),
+    name = card['name']
+    t = card['text']
+    t = t.replace(name, '/name/')
+    doc = nlp(t)
+    for k in card.keys():
+        app.logger.info("card: [%s][%s]", k, card[k])
 
-            }
-            tokens.append(token)
+    labels = set([clean_label(ent.label_) for ent in doc.ents])
+    labelsStr = ', '.join(str(e) for e in labels)
 
-        results.append({
-            "card": card,
-            "doc": tokens
-        })
+    tokens = []
+    for token in doc:
+        # app.logger.info("token: [%s]", token)
+        # https://spacy.io/api/token#attributes
+        token = {
+            "text": token.text,
+            "lemma": token.lemma_,
+            "norm": token.norm_,
+            "lower": token.lower_,
+            "like_num": token.like_num,
+            "pos": token.pos_,
+            "dep": token.dep_,
+            "ent_type": clean_label(token.ent_type_),
 
-    return results
+        }
+        tokens.append(token)
+
+    return {
+        "card": card,
+        "doc": tokens,
+        "labels": labelsStr
+    }

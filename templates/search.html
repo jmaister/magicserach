@@ -6,6 +6,7 @@
     <h2>Search form</h2>
     <form method="POST" action="/search" >
       <div>Name (partial): <input name="cardname" placeholder="Card name" value="{{ request.form['cardname'] }}" /> </div>
+      <div>Text (partial): <input name="text" placeholder="Card text" value="{{ request.form['text'] }}" /> </div>
       <div>Card trigger:
         <select name="trigger">
           <option value="" {% if request.form['trigger'] == '' %} selected="selected"{% endif %}> - empty -</option>
@@ -40,7 +41,7 @@
       <button type="submit">Search</button>
     </form>
 
-    <h3>{{rows.length}} Results:</h3>
+    <h3>{{rows|length}} Results:</h3>
     {% for row in rows %}
     <div class="pure-g result-card" id="{{row['uuid']}}">
       <div class="pure-u-2-5 cardname">
