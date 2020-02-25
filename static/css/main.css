@@ -14,9 +14,41 @@
     border: 1px dashed black;
 }
 
-.pure-g {
+
+.result-card {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     border: 1px solid black;
+    margin: 3px;
+    padding: 5px;
+}
+
+.words {
+    display: flex;
+    overflow-x: scroll;
+}
+
+.words .word {
+    border: 1px black solid;
+    border-radius: 5px;
+    padding: 3px;
+}
+
+.words .word .field {
+    border: 1px black solid;
+    border-radius: 5px;
+}
+
+.words .word .lower {
+    background-color: lightgreen;
+}
+.words .word .lemma {
+    background-color: lightsalmon;
+}
+.words .word .like_num {
+    background-color: lightblue;
+}
+.words .word .ent_type {
+    background-color: olive;
 }

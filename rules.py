@@ -7,7 +7,6 @@ from spacy.lang.en import English
 from spacy.pipeline import EntityRuler
 from spacy.matcher import Matcher
 
-
 patterns = [
     
     {"label": "ON_DRAW_CARD,1", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
@@ -151,7 +150,7 @@ def run(conn):
 
     cur = conn.cursor()
 
-    for cardKey in list(data.keys())[:10]:
+    for cardKey in list(data.keys()):
         card = data[cardKey]
         if 'text' in card:
             name = card['name']
@@ -200,5 +199,46 @@ def run(conn):
     with open('card_labels.json', 'w') as f:
         json.dump(output_data, f)
 
-def analize(conn, uuid):
-    return "abc"
+def analize(app, conn, uuid):
+    import json
+
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM cards WHERE uuid = ?", [uuid])
+    cards = cur.fetchall()
+
+    # Disable 'ner' to remove default Named-Entity Recognition
+    nlp = spacy.load('en_core_web_sm', disable=['ner'])
+    ruler = EntityRuler(nlp, validate=True)
+    ruler.add_patterns(patterns)
+    nlp.add_pipe(ruler)
+
+    results = []
+    for card in cards:
+        name = card['name']
+        t = card['text']
+        t = t.replace(name, '/name/')
+        doc = nlp(t)
+
+        tokens = []
+        for token in doc:
+            # app.logger.info("token: [%s]", token)
+            # https://spacy.io/api/token#attributes
+            token = {
+                "text": token.text,
+                "lemma": token.lemma_,
+                "norm": token.norm_,
+                "lower": token.lower_,
+                "like_num": token.like_num,
+                "pos": token.pos_,
+                "dep": token.dep_,
+                "ent_type": clean_label(token.ent_type_),
+
+            }
+            tokens.append(token)
+
+        results.append({
+            "card": card,
+            "doc": tokens
+        })
+
+    return results
