@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Magic Search</h1>
-
     <h2>Search form</h2>
     <form method="POST" action="/search" >
       <div>Name (partial): <input name="cardname" placeholder="Card name" value="{{ request.form['cardname'] }}" /> </div>

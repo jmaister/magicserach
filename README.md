@@ -19,6 +19,11 @@
     wget https://www.mtgjson.com/files/AllPrintings.sqlite
     wget https://www.mtgjson.com/files/StandardCards.json
 
+## Run on server
+
+    localhost:5000/setup
+    localhost:5000/runrules
+
 
 # CC
 
