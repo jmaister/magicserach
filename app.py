@@ -26,12 +26,7 @@ def get_search():
     searchstr = json.dumps(request.form)
     app.logger.info("Search [%s]", searchstr)
 
-    conn.execute("""
-        INSERT INTO history (data, type, remote_addr, url)
-        VALUES (?, ?, ?, ?)
-    """, [searchstr, "SEARCH", request.remote_addr, request.url])
-    conn.commit()
-
+    save_history(request, conn, "SEARCH", searchstr)
 
     sql = """SELECT * FROM cards AS c, cardlabels AS cl
              WHERE c.uuid = cl.uuid """
@@ -132,11 +127,17 @@ def setup():
 @app.route("/analize/<uuid>")
 def analize_uuid(uuid):
     conn = database.get_db(g)
+    save_history(request, conn, "ANALYZE", uuid)
+
     analysis = rules.analize(app, conn, uuid)
     return render_template('analysis.html', analysis=analysis)
 
-def save_search_history(conn, search):
-    pass
+def save_history(request, conn, htype, data):
+    conn.execute("""
+        INSERT INTO history (data, type, remote_addr, url)
+        VALUES (?, ?, ?, ?)
+    """, [data, htype, request.remote_addr, request.url])
+    conn.commit()
 
 
 if __name__ == "__main__":
