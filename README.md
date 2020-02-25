@@ -16,6 +16,8 @@
 
     pip install -r requirements.txt
     python -m spacy download en
+    wget https://www.mtgjson.com/files/AllPrintings.sqlite
+    wget https://www.mtgjson.com/files/StandardCards.json
 
 
 # CC

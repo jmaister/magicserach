@@ -143,4 +143,4 @@ def save_history(request, conn, htype, data):
 if __name__ == "__main__":
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.config['TESTING'] = True
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
