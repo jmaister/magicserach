@@ -239,8 +239,8 @@ def analize(app, conn, uuid):
     t = card['text']
     t = t.replace(name, '/name/')
     doc = nlp(t)
-    for k in card.keys():
-        app.logger.info("card: [%s][%s]", k, card[k])
+    #for k in card.keys():
+    #    app.logger.info("card: [%s][%s]", k, card[k])
 
     labels = set([clean_label(ent.label_) for ent in doc.ents])
     labelsStr = ', '.join(str(e) for e in labels)
