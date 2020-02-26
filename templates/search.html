@@ -3,6 +3,7 @@
 {% block content %}
     <h2>Search</h2>
     <form class="pure-form" method="POST" action="/search" >
+      <div>Format: <b>Standard (More are coming...)</b></div>
       <div>Name (partial): <input name="cardname" placeholder="Card name" value="{{ request.form['cardname'] }}" /> </div>
       <div>Text (partial): <input name="text" placeholder="Card text" value="{{ request.form['text'] }}" /> </div>
       <div>Card trigger:
