@@ -57,3 +57,15 @@ body {
 .words .word .ent_type {
     background-color: olive;
 }
+
+.foot {
+    background-color: #1e1e1e;
+    color: white;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.foot a, .foot a:visited {
+    background-color: #1e1e1e;
+    color: white;
+}
