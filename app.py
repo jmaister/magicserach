@@ -16,6 +16,8 @@ import time
 
 @app.route("/")
 def main():
+    conn = database.get_db(g)
+    save_history(request, conn, "INDEX", "")
     return render_template('index.html')
 
 @app.route("/search", methods = ['GET', 'POST'])
