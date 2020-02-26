@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Stats / History</h2>
+
+    <table class="pure-table">
+        {% for row in history %}
+        <tr>
+            <td>{{row["dt"]}}</td>
+            <td>{{row["data"]}}</td>
+            <td>{{row["type"]}}</td>
+            <td>{{row["remote_addr"]}}</td>
+            <td>{{row["url"]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <p>{{analysis}}</p>
+{% endblock %}

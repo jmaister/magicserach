@@ -104,6 +104,8 @@ def run_rules():
     start_time = time.time()
 
     conn = database.get_db(g)
+    save_history(request, conn, "RUN_RULES", "")
+
     rules.run(conn)
 
     elapsed_time = time.time() - start_time
@@ -133,6 +135,18 @@ def analize_uuid(uuid):
 
     analysis = rules.analize(app, conn, uuid)
     return render_template('analysis.html', analysis=analysis)
+
+@app.route("/history")
+def history():
+    conn = database.get_db(g)
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT * FROM history ORDER BY dt DESC
+    """, [])
+    rows = cur.fetchall()
+    return render_template('history.html', history=rows)
+
+
 
 def save_history(request, conn, htype, data):
 
