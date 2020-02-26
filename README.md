@@ -1,15 +1,11 @@
 
-
 # Setup
-
-    pip install spacy
-    python -m spacy download en
-
-    pip install jsonschema
 
 ## Environment
 
-    apt-get install python3-venv
+    sudo apt install python3-venv
+    sudo apt install python3-flask
+
 
     python3 -m venv magicsearch
 
@@ -19,10 +15,18 @@
     wget https://www.mtgjson.com/files/AllPrintings.sqlite
     wget https://www.mtgjson.com/files/StandardCards.json
 
-## Run on server
+## Setup on server
 
     localhost:5000/setup
     localhost:5000/runrules
+
+
+# Production Run
+
+    source magicsearch/bin/activate
+    export FLASK_APP=app
+    export FLASK_ENV=production
+    nohup flask run -h 0.0.0.0 -p 5000 --with-threads --reload > ms.log &
 
 
 # CC
