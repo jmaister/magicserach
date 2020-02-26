@@ -1,5 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <a href="/search">Go to search</a>
+    <p>Welcome!</p>
+    <p>Magic Deep Search is a search engine for <b>Magic: The Gathering</b> cards.</p>
+    <p>The cards have been tagged using <b>Machine Learning</b> so it is easier to:
+        <ul>
+            <li>Find combos</li>
+            <li>Find a card with specific ability</li>
+            <li>etc...</li>
+        </ul>
+    </p>
+    <p>Besides the tipical search for the card name, card text, mana color, ...
+        you can search for:
+        <ul>
+            <li>Triggers: search by a triggering action i.e. <b>ON_ATTACK</b> -> "Whenever XXX attacks"</li>
+            <li>Effects: search by effect i.e. <b>LIFE_GAIN</b> -> "You gain 3 life.</li>
+        </ul>
+    </p>
+
+    <p><i>Note: work is still in progress, so not all card properties or abilities have been trained.</i></p>
+
+    <a class="pure-button pure-button-primary" href="/search">Go to the Search Page</a>
 {% endblock %}

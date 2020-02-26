@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Search form</h2>
-    <form method="POST" action="/search" >
+    <h2>Search</h2>
+    <form class="pure-form" method="POST" action="/search" >
       <div>Name (partial): <input name="cardname" placeholder="Card name" value="{{ request.form['cardname'] }}" /> </div>
       <div>Text (partial): <input name="text" placeholder="Card text" value="{{ request.form['text'] }}" /> </div>
       <div>Card trigger:
@@ -36,7 +36,9 @@
         <div>Black: <input type="checkbox" name="color_B" {% if request.form['color_B'] == 'on' %} checked {% endif %}/></div>
         <div>Uncolored: <input type="checkbox" name="color_NULL" {% if request.form['color_NULL'] == 'on' %} checked {% endif %}/></div>
       </div>
-      <button type="submit">Search</button>
+      <p>
+        <button class="pure-button pure-button-primary" type="submit">Search</button>
+      </p>
     </form>
 
     <h3>{{rows|length}} Results:</h3>
