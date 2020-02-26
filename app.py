@@ -135,10 +135,15 @@ def analize_uuid(uuid):
     return render_template('analysis.html', analysis=analysis)
 
 def save_history(request, conn, htype, data):
+
+    ip = request.remote_addr
+    if "X-Real-IP" in request.headers:
+        ip = request.headers['X-Real-IP']
+    
     conn.execute("""
         INSERT INTO history (data, type, remote_addr, url)
         VALUES (?, ?, ?, ?)
-    """, [data, htype, request.remote_addr, request.url])
+    """, [data, htype, ip, request.url])
     conn.commit()
 
 
