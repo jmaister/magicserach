@@ -45,4 +45,23 @@
     </div>
     <p>/name/: Name of the card</p>
 
+    <h2>Debug</h2>
+    <table>
+    {% for k in analysis.card.keys() %}
+        <tr>
+            <td>{{k}}</td>
+            <td>{{analysis.card[k]}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <p>{{analysis}}</p>
+    
+    <h2>Dependencies</h2>
+
+    <div class="dependencies">
+        {{analysis.display_dep|safe}}
+    </div>
+    
+
 {% endblock %}

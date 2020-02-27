@@ -107,7 +107,7 @@ def run_rules():
     conn = database.get_db(g)
     save_history(request, conn, "RUN_RULES", "")
 
-    rules.run(conn)
+    rules.run(app, conn)
     conn.close()
 
     elapsed_time = time.time() - start_time

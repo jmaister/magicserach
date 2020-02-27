@@ -81,3 +81,10 @@ body {
 .cardcontainer .cardinfo {
     padding: 20px;
 }
+
+.dependencies {
+    width: 100%;
+    overflow: scroll;
+    border: 1px solid black;
+    transform: scale(70%);
+}

@@ -7,6 +7,22 @@ from spacy.lang.en import English
 from spacy.pipeline import EntityRuler
 from spacy.matcher import Matcher
 
+def create_pattern(str):
+    pattern = []
+    for w in str.split(" "):
+        if w.startswith("L"):
+            pattern.append({"LOWER": w[1:]})
+        elif w == '/name/':
+            pattern.append({"ORTH": w})
+        elif w == 'N':
+            pattern.append({"LIKE_NUM": True})
+        elif w == '?':
+            pattern.append({"OP": "?"})
+        else:
+            pattern.append({"LEMMA": w})
+
+    return pattern
+
 patterns = [
     
     {"label": "ON_DRAW_CARD,A", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
@@ -25,12 +41,23 @@ patterns = [
     {"label": "ON_DIE,A", "pattern": [{"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
     {"label": "ON_DIE,B", "pattern": [{"LEMMA": "whenever"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
     {"label": "ON_DIE,C", "pattern": [{"LEMMA": "when"}, {"ORTH": "/name/"}, {"LEMMA": "die"}]},
+    {"label": "ON_DIE,D", "pattern": [{"LEMMA": "when"}, {"LEMMA": "enchant"}, {"LEMMA": "creature"}, {"LEMMA": "die"}]},
+    {"label": "ON_DIE,E", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "an"}, {"LEMMA": "enchant"}, {"LEMMA": "creature"}, {"LEMMA": "die"}]},
+    {"label": "ON_DIE,F", "pattern": [{"LEMMA": "when"}, {"LEMMA": "this"}, {"LEMMA": "creature"}, {"LEMMA": "die"}]},
+    {"label": "ON_DIE,G", "pattern": [{"LEMMA": "when"}, {"LEMMA": "this"}, {"LEMMA": "creature"}, {"LEMMA": "die"}]},
+    {"label": "ON_DIE,H", "pattern": create_pattern("whenever a creature with a coin counter on Lit die")},
+    {"label": "ON_DIE,I", "pattern": create_pattern("whenever /name/ or another creature or planeswalker Lyou control die")},
+    {"label": "ON_DIE,J", "pattern": create_pattern("whenever another creature die")},
+    {"label": "ON_DIE,K", "pattern": create_pattern("whenever an ? Lyou control die")},
+    # TODO: "Daxos, Blessed by the Sun": Whenever another creature you control enters the battlefield or dies
+    # TODO: "Pelt Collector": Whenever another creature you control enters the battlefield or dies
 
     {"label": "ON_CREATURE_ENTER,A", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "another"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
     {"label": "ON_CREATURE_ENTER,B", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "a"}, {"LEMMA": "nontoken"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
     {"label": "ON_CREATURE_ENTER,C", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "a"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
 
-    {"label": "DAMAGE_OWN", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "you"}]},
+    {"label": "DAMAGE_OWN,A", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "you"}]},
+    {"label": "DAMAGE_CONTROLLER,A", "pattern": [{"ORTH": "/name/"}, {"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "that"}, {"LEMMA": "creature"}, {"LEMMA": "'s"}, {"LEMMA": "controller"} ]},
     {"label": "DAMAGE_PLAYERS", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "each"}, {"LEMMA": "player"}]},
     {"label": "DAMAGE_OPPONENT", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "each"}, {"LEMMA": "opponent"}]},
     {"label": "DAMAGE_ANY", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "any"}, {"LEMMA": "target"}]},
@@ -73,6 +100,7 @@ patterns = [
 
     {"label": "ENTERS_TAPPED", "pattern": [{"ORTH": "/name/"}, {"LEMMA": "enters"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}, {"LEMMA": "tap"}]},
 ]
+
 
 def get_labels():
     labels = set()
@@ -154,7 +182,7 @@ def clean_label(label):
         return label[0:pos]
     return label
 
-def run(conn):
+def run(app, conn):
     import json
 
     with open("StandardCards.json") as datafile:
@@ -170,18 +198,34 @@ def run(conn):
 
     cur = conn.cursor()
 
+    ## TODO: MAKE SQL IN BATCHES
+    data_to_save = []
+
     for cardKey in list(data.keys()):
         card = data[cardKey]
         if 'text' in card:
             name = card['name']
+
             t = card['text']
             t = t.replace(name, '/name/')
+            # Fix names that contain comma and can be reference as both
+            # i.e. "Roalesk, Apex Hybrid"
+            if name.find(",") > 0:
+                shortname = name[0:name.find(",")]
+                t = t.replace(shortname, '/name/')
+
             doc = nlp(t)
 
             labels = set([clean_label(ent.label_) for ent in doc.ents])
             labelsStr = ', '.join(str(e) for e in labels)
 
             insert(cur, card["uuid"], labelsStr)
+        else:
+            insert(cur, card["uuid"], "")
+
+            #
+            # https://docs.python.org/2/library/sqlite3.html#sqlite3-controlling-transactions
+            #
 
             #for token in doc:
             #    print(token.text, token.lemma_, token.pos_, token.dep_)
@@ -211,6 +255,12 @@ def analize(app, conn, uuid):
     name = card['name']
     t = card['text']
     t = t.replace(name, '/name/')
+    # Fix names that contain comma and can be reference as both
+    # i.e. "Roalesk, Apex Hybrid"
+    if name.find(",") > 0:
+        shortname = name[0:name.find(",")]
+        t = t.replace(shortname, '/name/')
+
     doc = nlp(t)
     #for k in card.keys():
     #    app.logger.info("card: [%s][%s]", k, card[k])
