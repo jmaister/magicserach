@@ -3,9 +3,19 @@
 {% block content %}
     <h2>Card Analysis</h2>
 
-    <p><b>Name:</b> {{analysis.card['name']}}</p>
-    <p><b>Text:</b> {{analysis.card['text']}}</p>
-    <p><b>TAGS:</b> {{analysis.labels}}</p>
+    <div class="cardinfo">
+        <div>
+            {% set i = analysis.card['scryfallId'] %}
+            <img class="cardimage" src="https://img.scryfall.com/cards/normal/front/{{i[0]}}/{{i[1]}}/{{i}}.jpg" >
+        </div>
+        <div class="cardtext">
+            <p><b>Name:</b> {{analysis.card['name']}}</p>
+            <p><b>Text:</b> {{analysis.card['text']}}</p>
+            <p><b>TAGS:</b> {{analysis.labels}}</p>
+        </div>
+    </div>
+    
+    <p>Scroll to see all tokens -></p>
     <div class="words">
     {% for t in analysis.doc %}
         <span class="word">
@@ -21,6 +31,10 @@
     </div>
 
     <h2>Legend</h2>
+
+    <div>
+    </div>
+
     <div class="words">
         <span class="word">
             <div class="text">Original text</div>
