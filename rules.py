@@ -9,44 +9,44 @@ from spacy.matcher import Matcher
 
 patterns = [
     
-    {"label": "ON_DRAW_CARD,1", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
-    {"label": "ON_DRAW_CARD,2", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "second"}, {"LEMMA": "card"}]},
+    {"label": "ON_DRAW_CARD,A", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
+    {"label": "ON_DRAW_CARD,b", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "second"}, {"LEMMA": "card"}]},
     
-    {"label": "DRAW_CARD,1", "pattern": [{"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
-    {"label": "DRAW_CARD,n", "pattern": [{"LEMMA": "draw"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
+    {"label": "DRAW_CARD,A", "pattern": [{"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
+    {"label": "DRAW_CARD,B", "pattern": [{"LEMMA": "draw"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
 
     {"label": "ON_DISCARD_CARD", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "discard"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
-    {"label": "DISCARD_CARD,1", "pattern": [{"LEMMA": "discard"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
-    {"label": "DISCARD_CARD,2", "pattern": [{"LEMMA": "discard"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
+    {"label": "DISCARD_CARD,A", "pattern": [{"LEMMA": "discard"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
+    {"label": "DISCARD_CARD,B", "pattern": [{"LEMMA": "discard"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
 
     {"label": "ON_DAMAGE", "pattern": [{"LEMMA": "whenever"}, {"ORTH": "/name/"}, {"LEMMA": "deal"}, {"LEMMA": "damage"}]},
     {"label": "ON_ATTACK", "pattern": [{"LEMMA": "whenever"}, {"ORTH": "/name/"}, {"LEMMA": "attack"}]},
     {"label": "ON_ENTER", "pattern": [{"LEMMA": "when"}, {"ORTH": "/name/"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
-    {"label": "ON_DIE,1", "pattern": [{"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
-    {"label": "ON_DIE,2", "pattern": [{"LEMMA": "whenever"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
-    {"label": "ON_DIE,3", "pattern": [{"LEMMA": "when"}, {"ORTH": "/name/"}, {"LEMMA": "die"}]},
+    {"label": "ON_DIE,A", "pattern": [{"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
+    {"label": "ON_DIE,B", "pattern": [{"LEMMA": "whenever"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
+    {"label": "ON_DIE,C", "pattern": [{"LEMMA": "when"}, {"ORTH": "/name/"}, {"LEMMA": "die"}]},
 
-    {"label": "ON_CREATURE_ENTER,1", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "another"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
-    {"label": "ON_CREATURE_ENTER,2", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "a"}, {"LEMMA": "nontoken"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
-    {"label": "ON_CREATURE_ENTER,3", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "a"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
+    {"label": "ON_CREATURE_ENTER,A", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "another"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
+    {"label": "ON_CREATURE_ENTER,B", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "a"}, {"LEMMA": "nontoken"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
+    {"label": "ON_CREATURE_ENTER,C", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "a"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
 
     {"label": "DAMAGE_OWN", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "you"}]},
     {"label": "DAMAGE_PLAYERS", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "each"}, {"LEMMA": "player"}]},
     {"label": "DAMAGE_OPPONENT", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "each"}, {"LEMMA": "opponent"}]},
     {"label": "DAMAGE_ANY", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "any"}, {"LEMMA": "target"}]},
-    {"label": "DAMAGE_CREATURE,1", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "target"}, {"LEMMA": "creature"}] },
-    {"label": "DAMAGE_CREATURE,2", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "each"}, {"LEMMA": "other"}, {"LEMMA": "creature"}] },
+    {"label": "DAMAGE_CREATURE,A", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "target"}, {"LEMMA": "creature"}] },
+    {"label": "DAMAGE_CREATURE,B", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "each"}, {"LEMMA": "other"}, {"LEMMA": "creature"}] },
     
-    {"label": "ON_LIFE_GAIN,1", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "life"}]},
-    {"label": "ON_LIFE_GAIN,2", "pattern": [{"LEMMA": "when"}, {"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "life"}]},
+    {"label": "ON_LIFE_GAIN,A", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "life"}]},
+    {"label": "ON_LIFE_GAIN,B", "pattern": [{"LEMMA": "when"}, {"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "life"}]},
 
-    {"label": "LIFE_GAIN,1", "pattern": [{"LOWER": "you"}, {"LEMMA": "gain"}, {"LIKE_NUM": True}, {"LEMMA": "life"}]},
-    {"label": "LIFE_GAIN,2", "pattern": [{"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "x"}, {"LEMMA": "life"}]},
-    {"label": "LIFE_GAIN,3", "pattern": [{"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "life"}, {"LEMMA": "equal"}, {"LEMMA": "to"}]},
-    {"label": "LIFE_LOSE_OWN,1", "pattern": [{"LOWER": "you"}, {"LEMMA": "lose"}, {"LIKE_NUM": True}, {"LEMMA": "life"}]},
-    {"label": "LIFE_LOSE_OWN,2", "pattern": [{"LOWER": "you"}, {"LEMMA": "lose"}, {"LEMMA": "x"}, {"LEMMA": "life"}]},
-    {"label": "LIFE_LOSE_OPPONENT,1", "pattern": [{"LEMMA": "each"}, {"LEMMA": "opponent"}, {"LEMMA": "lose"}, {"LIKE_NUM": True}, {"LEMMA": "life"}]},
-    {"label": "LIFE_LOSE_OPPONENT,2", "pattern": [{"LEMMA": "each"}, {"LEMMA": "opponent"}, {"LEMMA": "lose"}, {"LEMMA": "x"}, {"LEMMA": "life"}]},
+    {"label": "LIFE_GAIN,A", "pattern": [{"LOWER": "you"}, {"LEMMA": "gain"}, {"LIKE_NUM": True}, {"LEMMA": "life"}]},
+    {"label": "LIFE_GAIN,B", "pattern": [{"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "x"}, {"LEMMA": "life"}]},
+    {"label": "LIFE_GAIN,C", "pattern": [{"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "life"}, {"LEMMA": "equal"}, {"LEMMA": "to"}]},
+    {"label": "LIFE_LOSE_OWN,A", "pattern": [{"LOWER": "you"}, {"LEMMA": "lose"}, {"LIKE_NUM": True}, {"LEMMA": "life"}]},
+    {"label": "LIFE_LOSE_OWN,B", "pattern": [{"LOWER": "you"}, {"LEMMA": "lose"}, {"LEMMA": "x"}, {"LEMMA": "life"}]},
+    {"label": "LIFE_LOSE_OPPONENT,A", "pattern": [{"LEMMA": "each"}, {"LEMMA": "opponent"}, {"LEMMA": "lose"}, {"LIKE_NUM": True}, {"LEMMA": "life"}]},
+    {"label": "LIFE_LOSE_OPPONENT,B", "pattern": [{"LEMMA": "each"}, {"LEMMA": "opponent"}, {"LEMMA": "lose"}, {"LEMMA": "x"}, {"LEMMA": "life"}]},
 
     {"label": "SCRY_TOP", "pattern": [{"LEMMA": "look"}, {"LEMMA": "at"}, {"LEMMA": "the"}, {"LEMMA": "top"}, {"LIKE_NUM": True}, {"LEMMA": "card"}, {"LEMMA": "of"}, {"LOWER": "your"}, {"LEMMA": "library"}]},
 
@@ -58,12 +58,12 @@ patterns = [
     # TODO: devotion to more than one color
     # TODO: remove "devotion" explanation
 
-    {"label": "CREATE_TOKEN,1", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
-    {"label": "CREATE_TOKEN,2", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
+    {"label": "CREATE_TOKEN,A", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
+    {"label": "CREATE_TOKEN,B", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
 
-    {"label": "CREATE_FOOD_TOKEN,1", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LOWER": "food"}, {"LEMMA": "token"}]},
-    {"label": "CREATE_FOOD_TOKEN,2", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LEMMA": "number"}, {"LEMMA": "of"}, {"LOWER": "food"}, {"LEMMA": "token"}]},
-    {"label": "CREATE_FOOD_TOKEN,3", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LOWER": "food"}, {"LEMMA": "token"}]},
+    {"label": "CREATE_FOOD_TOKEN,A", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LOWER": "food"}, {"LEMMA": "token"}]},
+    {"label": "CREATE_FOOD_TOKEN,B", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LEMMA": "number"}, {"LEMMA": "of"}, {"LOWER": "food"}, {"LEMMA": "token"}]},
+    {"label": "CREATE_FOOD_TOKEN,C", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LOWER": "food"}, {"LEMMA": "token"}]},
 
     {"label": "GRAVEYARD_TO_LIBRARY", "pattern": [{"LEMMA": "from"}, {"LOWER": "your"}, {"LEMMA": "graveyard"}, {"LEMMA": "on"}, {"LEMMA": "top"}, {"LEMMA": "of"}, {"LOWER": "your"}, {"LEMMA": "library"},]},
 
@@ -166,10 +166,7 @@ def run(conn):
     nlp = spacy.load('en_core_web_sm', disable=['ner'])
     ruler = EntityRuler(nlp, validate=True)
     ruler.add_patterns(patterns)
-
     nlp.add_pipe(ruler)
-
-    output_data = []
 
     cur = conn.cursor()
 
@@ -181,46 +178,20 @@ def run(conn):
             t = t.replace(name, '/name/')
             doc = nlp(t)
 
-            #print("----------------------------")
             labels = set([clean_label(ent.label_) for ent in doc.ents])
             labelsStr = ', '.join(str(e) for e in labels)
-            #print("*** " + card["name"] + " *** " + labelsStr)
-            #print("text:", t)
 
-            output_data.append({"uuid": card["uuid"], "labels": labelsStr})
             insert(cur, card["uuid"], labelsStr)
-
-            """ Find numbers
-            for ent in doc.ents:
-                label = ent.label_
-                #print("- [", label,"]" , ent.text, ent.start, ent.end)
-                #print(doc[ent.start:ent.end])
-                pattern = get_pattern(label)
-                #print("- pattern:", pattern)
-                for n in get_num_tokens(pattern):
-                    numText = doc[ent.start+n].text
-                    num = to_integer(numText)
-                    print("- num", numText, "->", num)
-            """
-            
 
             #for token in doc:
             #    print(token.text, token.lemma_, token.pos_, token.dep_)
+            #print([(ent.text, ent.label_) for ent in doc.ents])
 
             #displacy.render(doc, style='dep')
             #displacy.render(doc, style='ent')
             
-            #print([(ent.text, ent.label_) for ent in doc.ents])
-
-            #print(doc.to_json())
-            #for token in doc:
-            #    print(token.text, token.lemma_, token.pos_, token.dep_)
 
     conn.commit()
-    conn.close()
-
-    with open('card_labels.json', 'w') as f:
-        json.dump(output_data, f)
 
 def analize(app, conn, uuid):
     import json
@@ -260,12 +231,13 @@ def analize(app, conn, uuid):
             "pos": token.pos_,
             "dep": token.dep_,
             "ent_type": clean_label(token.ent_type_),
-
         }
         tokens.append(token)
 
     return {
         "card": card,
         "doc": tokens,
-        "labels": labelsStr
+        "labels": labelsStr,
+        "display_ent": displacy.render(doc, style='ent'),
+        "display_dep": displacy.render(doc, style='dep'),
     }
