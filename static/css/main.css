@@ -72,12 +72,12 @@ body {
     color: white;
 }
 
-.cardinfo {
+.cardcontainer {
     display: flex;
 }
-.cardinfo .cardimage {
+.cardcontainer .cardimage {
     width: 300px;
 }
-.cardinfo .cardtext {
+.cardcontainer .cardinfo {
     padding: 20px;
 }

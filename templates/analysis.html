@@ -3,14 +3,14 @@
 {% block content %}
     <h2>Card Analysis</h2>
 
-    <div class="cardinfo">
+    <div class="cardcontainer">
         <div>
             {% set i = analysis.card['scryfallId'] %}
             <img class="cardimage" src="https://img.scryfall.com/cards/normal/front/{{i[0]}}/{{i[1]}}/{{i}}.jpg" >
         </div>
-        <div class="cardtext">
+        <div class="cardinfo">
             <p><b>Name:</b> {{analysis.card['name']}}</p>
-            <p><b>Text:</b> {{analysis.card['text']}}</p>
+            <p><b>Text:</b> {{analysis.display_ent|safe}} </p>
             <p><b>TAGS:</b> {{analysis.labels}}</p>
         </div>
     </div>
@@ -31,9 +31,6 @@
     </div>
 
     <h2>Legend</h2>
-
-    <div>
-    </div>
 
     <div class="words">
         <span class="word">
