@@ -96,6 +96,7 @@ def get_search():
         "triggers": rules.get_trigger_labels(),
         "effects": rules.get_effect_labels()
     }
+    conn.close()
 
     return render_template('search.html', rows=rows, data=data)
 
@@ -107,6 +108,7 @@ def run_rules():
     save_history(request, conn, "RUN_RULES", "")
 
     rules.run(conn)
+    conn.close()
 
     elapsed_time = time.time() - start_time
     return "OK "+ str(elapsed_time)
@@ -123,6 +125,7 @@ def setup():
         remote_addr TEXT,
         url TEXT
     ) """)
+    conn.close()
 
 
     elapsed_time = time.time() - start_time
