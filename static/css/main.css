@@ -72,14 +72,11 @@ body {
     color: white;
 }
 
-.cardcontainer {
-    display: flex;
-}
 .cardcontainer .cardimage {
-    width: 300px;
+    width: 100%;
 }
 .cardcontainer .cardinfo {
-    padding: 20px;
+    padding: 10px;
 }
 
 .dependencies {
@@ -87,4 +84,8 @@ body {
     overflow: scroll;
     border: 1px solid black;
     transform: scale(70%);
+}
+
+.beta {
+    color: red;
 }

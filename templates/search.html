@@ -46,9 +46,9 @@
     {% for row in rows %}
     <div class="pure-g result-card" id="{{row['uuid']}}">
       <div class="pure-u-1-1 cardname">
-        <a class="pure-button" href="analize/{{row['uuid']}}">🔗 {{row['name']}}</a>
+        <a class="pure-button" target="_blank" href="analize/{{row['uuid']}}">🔗 {{row['name']}}</a>
       </div>
-      <div class="pure-u-1-3">
+      <div class="pure-u-1-2">
         Colors: [
         {% if row['colors'] != None %}
           {% set colorlist = row['colors'].split(',') %}
@@ -60,7 +60,7 @@
         {% endif %}
         ]
       </div>
-      <div class="pure-u-1-3">Mana [
+      <div class="pure-u-1-2">Mana [
         {% if row['mana'] != "" %}
           {% for m in row['mana'].split(',') %}
             <img class="icon" src="/img/{{m}}.svg" >
@@ -70,7 +70,7 @@
         {% endif %}
         ]
       </div>
-      <div class="pure-u-1-3">
+      <div class="pure-u-1-1">
         {{row["labeledpct"]|round(1, 'floor')}}% ({{row["labeledwords"]}} of {{row["totalwords"]}} text tokens) {{row['labels']}}
       </div>
       <div class="pure-u-1  cardtext">{{row['text']}}</div>

@@ -7,10 +7,17 @@
     <title>Magic Deep Search</title>
 
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+<!--[if lte IE 8]>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-old-ie-min.css">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-min.css">
+<!--<![endif]-->
+    
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-    <h1>Magic Deep Search <sup>beta</sup></h1>
+    <h1>Magic Deep Search <sup class="beta">beta</sup></h1>
 
     {% block content %}
     <h1>content</h1>
