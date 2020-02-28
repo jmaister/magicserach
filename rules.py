@@ -105,12 +105,19 @@ patterns = [
     {"label": "FLASH", "pattern": [{"LOWER": "flash"}]},
     {"label": "PROLIFERATE", "pattern": [{"LEMMA": "proliferate"}]},
     {"label": "LIFELINK", "pattern": [{"LEMMA": "lifelink"}]},
+    {"label": "DEATHTOUCH", "pattern": [{"LEMMA": "deathtouch"}]},
+    {"label": "VIGILANCE", "pattern": [{"LEMMA": "vigilance"}]},
+    {"label": "REACH", "pattern": [{"LEMMA": "reach"}]},
+    {"label": "DEFENDER", "pattern": [{"LOWER": "defender"}]},
+    {"label": "FIRST_STRIKE", "pattern": create_pattern("first strike")},
 
     {"label": "ENTERS_TAPPED", "pattern": [{"ORTH": "/name/"}, {"LEMMA": "enters"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}, {"LEMMA": "tap"}]},
 
     {"label": "RETURN_TO_HAND,A", "pattern": create_pattern("return /name/ to Lyour hand")},
 
     {"label": "ADAMANT", "pattern": create_pattern("adamant — if at least three ? mana Lwas Lspent to cast this spell")},
+
+    {"label": "REDUCED_MANA_COST", "pattern": create_pattern("without pay Ltheir mana cost")},
 
 ]
 
@@ -289,9 +296,9 @@ def get_card_analysis(nlp, card, forDisplay):
 
     manaStr = ""
     try:
-        manaregex = re.compile(r"{(\w)}", re.IGNORECASE)
+        manaregex = re.compile(r"{(\w|\w\/\w)}", re.IGNORECASE)
         mana = manaregex.findall(card["manaCost"])
-        manaStr = ','.join(m for m in mana)
+        manaStr = ','.join(m.replace("/", "") for m in mana)
     except:
         pass
 
