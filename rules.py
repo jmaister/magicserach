@@ -275,12 +275,10 @@ def analize(app, conn, uuid):
     totalwords = len(doc)
     labeledwords = 0
     for token in doc:
-        print(token.text, token.lemma_, token.pos_, token.dep_, token.ent_type_)
+        #print(token.text, token.lemma_, token.pos_, token.dep_, token.ent_type_)
         if len(token.ent_type_) > 0 or token.pos_ == "PUNCT":
             labeledwords += 1
-    lebeledpct = (labeledwords / totalwords) * 100.0
-
-    # print("total "+ str(totalwords) + "  lbl "+ str(labeledwords) + "  pct " + str(lebeledpct))
+    labeledpct = (labeledwords / totalwords) * 100.0
 
     labels = set([clean_label(ent.label_) for ent in doc.ents])
     labelsStr = ', '.join(str(e) for e in labels)
@@ -314,5 +312,5 @@ def analize(app, conn, uuid):
         "mana": mana,
         "totalwords": totalwords,
         "labeledwords": labeledwords,
-        "lebeledpct": lebeledpct
+        "labeledpct": labeledpct
     }
