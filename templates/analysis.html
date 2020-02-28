@@ -10,6 +10,12 @@
         </div>
         <div class="cardinfo">
             <p><b>Name:</b> {{analysis.card['name']}}</p>
+            <p><b>Mana:</b> 
+                {% for m in analysis.mana %}
+                    <img class="icon" src="/img/{{m}}.svg" >
+                {% endfor %}
+                / <b>CMC:</b> {{analysis.card['convertedManaCost']}}
+            </p>
             <p><b>Text:</b> {{analysis.display_ent|safe}} </p>
             <p><b>TAGS:</b> {{analysis.labels}}</p>
         </div>

@@ -37,7 +37,8 @@ patterns = [
 
     {"label": "ON_DAMAGE", "pattern": [{"LEMMA": "whenever"}, {"ORTH": "/name/"}, {"LEMMA": "deal"}, {"LEMMA": "damage"}]},
     {"label": "ON_ATTACK", "pattern": [{"LEMMA": "whenever"}, {"ORTH": "/name/"}, {"LEMMA": "attack"}]},
-    {"label": "ON_ENTER", "pattern": [{"LEMMA": "when"}, {"ORTH": "/name/"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
+    {"label": "ON_ENTER,A", "pattern": [{"LEMMA": "when"}, {"ORTH": "/name/"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
+    {"label": "ON_ENTER,B", "pattern": create_pattern("as /name/ enter the battlefield")},
     {"label": "ON_DIE,A", "pattern": [{"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
     {"label": "ON_DIE,B", "pattern": [{"LEMMA": "whenever"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
     {"label": "ON_DIE,C", "pattern": [{"LEMMA": "when"}, {"ORTH": "/name/"}, {"LEMMA": "die"}]},
@@ -75,6 +76,8 @@ patterns = [
     {"label": "LIFE_LOSE_OPPONENT,A", "pattern": [{"LEMMA": "each"}, {"LEMMA": "opponent"}, {"LEMMA": "lose"}, {"LIKE_NUM": True}, {"LEMMA": "life"}]},
     {"label": "LIFE_LOSE_OPPONENT,B", "pattern": [{"LEMMA": "each"}, {"LEMMA": "opponent"}, {"LEMMA": "lose"}, {"LEMMA": "x"}, {"LEMMA": "life"}]},
 
+    {"label": "LIFE_PAY,A", "pattern": create_pattern("pay N life")},
+
     {"label": "SCRY_TOP", "pattern": [{"LEMMA": "look"}, {"LEMMA": "at"}, {"LEMMA": "the"}, {"LEMMA": "top"}, {"LIKE_NUM": True}, {"LEMMA": "card"}, {"LEMMA": "of"}, {"LOWER": "your"}, {"LEMMA": "library"}]},
 
     {"label": "DEVOTION_RED", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "red"}]},
@@ -97,8 +100,12 @@ patterns = [
     {"label": "RIOT", "pattern": [{"LEMMA": "riot"}]},
     {"label": "FLYING", "pattern": [{"LOWER": "flying"}]},
     {"label": "FLASH", "pattern": [{"LOWER": "flash"}]},
+    {"label": "PROLIFERATE", "pattern": [{"LEMMA": "proliferate"}]},
+    {"label": "LIFELINK", "pattern": [{"LEMMA": "lifelink"}]},
 
     {"label": "ENTERS_TAPPED", "pattern": [{"ORTH": "/name/"}, {"LEMMA": "enters"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}, {"LEMMA": "tap"}]},
+
+    {"label": "RETURN_TO_HAND,a", "pattern": create_pattern("return /name/ to Lyour hand")},
 ]
 
 
@@ -182,6 +189,16 @@ def clean_label(label):
         return label[0:pos]
     return label
 
+def clean_text(text, name):
+    text = text.replace(name, '/name/')
+    # Fix names that contain comma and can be reference as both
+    # i.e. "Roalesk, Apex Hybrid"
+    if name.find(",") > 0:
+        shortname = name[0:name.find(",")]
+        text = text.replace(shortname, '/name/')
+    return text
+
+
 def run(app, conn):
     import json
 
@@ -206,14 +223,7 @@ def run(app, conn):
         if 'text' in card:
             name = card['name']
 
-            t = card['text']
-            t = t.replace(name, '/name/')
-            # Fix names that contain comma and can be reference as both
-            # i.e. "Roalesk, Apex Hybrid"
-            if name.find(",") > 0:
-                shortname = name[0:name.find(",")]
-                t = t.replace(shortname, '/name/')
-
+            t = clean_text(card['text'], name)
             doc = nlp(t)
 
             labels = set([clean_label(ent.label_) for ent in doc.ents])
@@ -239,6 +249,7 @@ def run(app, conn):
 
 def analize(app, conn, uuid):
     import json
+    import re
 
     cur = conn.cursor()
     cur.execute("SELECT * FROM cards WHERE uuid = ?", [uuid])
@@ -251,19 +262,9 @@ def analize(app, conn, uuid):
     ruler.add_patterns(patterns)
     nlp.add_pipe(ruler)
 
-
     name = card['name']
-    t = card['text']
-    t = t.replace(name, '/name/')
-    # Fix names that contain comma and can be reference as both
-    # i.e. "Roalesk, Apex Hybrid"
-    if name.find(",") > 0:
-        shortname = name[0:name.find(",")]
-        t = t.replace(shortname, '/name/')
-
+    t = clean_text(card['text'], name)
     doc = nlp(t)
-    #for k in card.keys():
-    #    app.logger.info("card: [%s][%s]", k, card[k])
 
     labels = set([clean_label(ent.label_) for ent in doc.ents])
     labelsStr = ', '.join(str(e) for e in labels)
@@ -284,10 +285,15 @@ def analize(app, conn, uuid):
         }
         tokens.append(token)
 
+    mana = []
+    if card["manaCost"] is not None:
+        manaregex = re.compile(r"{(\w)}", re.IGNORECASE)
+        mana = manaregex.findall(card["manaCost"])
     return {
         "card": card,
         "doc": tokens,
         "labels": labelsStr,
         "display_ent": displacy.render(doc, style='ent'),
         "display_dep": displacy.render(doc, style='dep'),
+        "mana": mana
     }
