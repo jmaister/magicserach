@@ -31,3 +31,13 @@ Get from here: https://scryfall.com/docs/api/images
 
     displacy.render(doc, style='dep')
     displacy.render(doc, style='ent')
+
+
+# Special cards
+
+Foulmire Knight
+
+Invert
+
+Revival / Revenge
+convertedManaCost 	8.0 ?
