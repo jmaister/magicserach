@@ -271,12 +271,13 @@ def clean_label(label):
     return label
 
 def clean_text(text, name):
-    text = text.replace(name, '/name/')
-    # Fix names that contain comma and can be reference as both
-    # i.e. "Roalesk, Apex Hybrid"
-    if name.find(",") > 0:
-        shortname = name[0:name.find(",")]
-        text = text.replace(shortname, '/name/')
+    if text is not None:
+        text = text.replace(name, '/name/')
+        # Fix names that contain comma and can be reference as both
+        # i.e. "Roalesk, Apex Hybrid"
+        if name.find(",") > 0:
+            shortname = name[0:name.find(",")]
+            text = text.replace(shortname, '/name/')
     return text
 
 
@@ -326,17 +327,21 @@ def create_nlp():
 
 def get_card_analysis(nlp, card, forDisplay):
     name = card['name']
-    t = clean_text(card['text'], name)
+    t = ""
+    if card['text'] is not None:
+        t = clean_text(card['text'], name)
     doc = nlp(t)
 
     # print([(ent.text, ent.label_) for ent in doc.ents])
     totalwords = len(doc)
     labeledwords = 0
+    labeledpct = 0.0
     for token in doc:
         #print(token.text, token.lemma_, token.pos_, token.dep_, token.ent_type_)
         if len(token.ent_type_) > 0 or token.pos_ == "PUNCT" or token.pos_ == "SPACE":
             labeledwords += 1
-    labeledpct = (labeledwords / totalwords) * 100.0
+    if totalwords > 0:
+        labeledpct = (labeledwords / totalwords) * 100.0
 
     labels = set([clean_label(ent.label_) for ent in doc.ents])
     labelsStr = ', '.join(str(e) for e in labels)
