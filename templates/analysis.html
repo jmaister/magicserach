@@ -18,6 +18,8 @@
             </p>
             <p><b>Text:</b> {{analysis.display_ent|safe}} </p>
             <p><b>TAGS:</b> {{analysis.labels}}</p>
+            <p><b>Analysis coverage:</b> {{analysis.lebeledpct|round(1, 'floor')}}% ({{analysis.labeledwords}} of {{analysis.totalwords}} words) </p>
+        
         </div>
     </div>
     

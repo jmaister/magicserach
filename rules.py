@@ -78,7 +78,8 @@ patterns = [
 
     {"label": "LIFE_PAY,A", "pattern": create_pattern("pay N life")},
 
-    {"label": "SCRY_TOP", "pattern": [{"LEMMA": "look"}, {"LEMMA": "at"}, {"LEMMA": "the"}, {"LEMMA": "top"}, {"LIKE_NUM": True}, {"LEMMA": "card"}, {"LEMMA": "of"}, {"LOWER": "your"}, {"LEMMA": "library"}]},
+    {"label": "SCRY,A", "pattern": create_pattern("Lscry N")},
+    {"label": "SCRY,B", "pattern": create_pattern("( look at the top N card of Lyour library , then put any number of Lthem on the bottom of Lyour library and the rest on top in any order . )")},
 
     {"label": "DEVOTION_RED", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "red"}]},
     {"label": "DEVOTION_BLACK", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "black"}]},
@@ -96,6 +97,8 @@ patterns = [
     {"label": "CREATE_FOOD_TOKEN,C", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LOWER": "food"}, {"LEMMA": "token"}]},
 
     {"label": "GRAVEYARD_TO_LIBRARY", "pattern": [{"LEMMA": "from"}, {"LOWER": "your"}, {"LEMMA": "graveyard"}, {"LEMMA": "on"}, {"LEMMA": "top"}, {"LEMMA": "of"}, {"LOWER": "your"}, {"LEMMA": "library"},]},
+    {"label": "LIBRARY_TO_GRAVEYARD", "pattern": create_pattern("library into Ltheir graveyard")},
+
 
     {"label": "RIOT", "pattern": [{"LEMMA": "riot"}]},
     {"label": "FLYING", "pattern": [{"LOWER": "flying"}]},
@@ -266,6 +269,17 @@ def analize(app, conn, uuid):
     t = clean_text(card['text'], name)
     doc = nlp(t)
 
+    # print([(ent.text, ent.label_) for ent in doc.ents])
+    totalwords = len(doc)
+    labeledwords = 0
+    for token in doc:
+        print(token.text, token.lemma_, token.pos_, token.dep_, token.ent_type_)
+        if len(token.ent_type_) > 0 or token.pos_ == "PUNCT":
+            labeledwords += 1
+    lebeledpct = (labeledwords / totalwords) * 100.0
+
+    # print("total "+ str(totalwords) + "  lbl "+ str(labeledwords) + "  pct " + str(lebeledpct))
+
     labels = set([clean_label(ent.label_) for ent in doc.ents])
     labelsStr = ', '.join(str(e) for e in labels)
 
@@ -281,7 +295,7 @@ def analize(app, conn, uuid):
             "like_num": token.like_num,
             "pos": token.pos_,
             "dep": token.dep_,
-            "ent_type": clean_label(token.ent_type_),
+            "ent_type": clean_label(token.ent_type_)
         }
         tokens.append(token)
 
@@ -295,5 +309,8 @@ def analize(app, conn, uuid):
         "labels": labelsStr,
         "display_ent": displacy.render(doc, style='ent'),
         "display_dep": displacy.render(doc, style='dep'),
-        "mana": mana
+        "mana": mana,
+        "totalwords": totalwords,
+        "labeledwords": labeledwords,
+        "lebeledpct": lebeledpct
     }
