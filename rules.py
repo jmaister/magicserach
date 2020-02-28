@@ -99,7 +99,6 @@ patterns = [
     {"label": "GRAVEYARD_TO_LIBRARY", "pattern": [{"LEMMA": "from"}, {"LOWER": "your"}, {"LEMMA": "graveyard"}, {"LEMMA": "on"}, {"LEMMA": "top"}, {"LEMMA": "of"}, {"LOWER": "your"}, {"LEMMA": "library"},]},
     {"label": "LIBRARY_TO_GRAVEYARD", "pattern": create_pattern("library into Ltheir graveyard")},
 
-
     {"label": "RIOT", "pattern": [{"LEMMA": "riot"}]},
     {"label": "FLYING", "pattern": [{"LOWER": "flying"}]},
     {"label": "FLASH", "pattern": [{"LOWER": "flash"}]},
@@ -108,7 +107,10 @@ patterns = [
 
     {"label": "ENTERS_TAPPED", "pattern": [{"ORTH": "/name/"}, {"LEMMA": "enters"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}, {"LEMMA": "tap"}]},
 
-    {"label": "RETURN_TO_HAND,a", "pattern": create_pattern("return /name/ to Lyour hand")},
+    {"label": "RETURN_TO_HAND,A", "pattern": create_pattern("return /name/ to Lyour hand")},
+
+    {"label": "ADAMANT", "pattern": create_pattern("adamant — if at least three ? mana Lwas Lspent to cast this spell")},
+
 ]
 
 
