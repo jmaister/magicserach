@@ -23,11 +23,13 @@
 
 # Production Run
 
+    pkill -SIGTERM flask
     source magicsearch/bin/activate
     export FLASK_APP=app
     export FLASK_ENV=production
-    nohup flask run -h 0.0.0.0 -p 5000 --with-threads --reload > ms.log &
+    nohup flask run -h 127.0.0.1 -p 5000 --with-threads --reload >> ms.log &
 
+    tail -f ms.log
 
 # CC
 
