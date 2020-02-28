@@ -18,7 +18,14 @@ import time
 def main():
     conn = database.get_db(g)
     save_history(request, conn, "INDEX", "")
-    return render_template('index.html')
+
+    cur = conn.cursor()
+    cur.execute("""select count(*) as cards, sum(totalwords) as t, sum(labeledwords) as l, (sum(labeledwords)*1.0)/sum(totalwords) as pct from cardlabels""")
+    stats = cur.fetchall()[0]
+
+    conn.close()
+
+    return render_template('index.html', stats=stats)
 
 @app.route("/search", methods = ['GET', 'POST'])
 def get_search():

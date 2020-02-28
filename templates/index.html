@@ -18,6 +18,26 @@
         </ul>
     </p>
 
+    <h3>Stats</h3>
+    <table class="pure-table">
+        <tr>
+            <td>Total cards in database</td>
+            <td>{{stats['cards']}}</td>
+        </tr>
+        <tr>
+            <td>Total words in card text</td>
+            <td>{{stats['t']}}</td>
+        </tr>
+        <tr>
+            <td>Recognized words in text</td>
+            <td>{{stats['l']}}</td>
+        </tr>
+        <tr>
+            <td>Percentage of recognized text</td>
+            <td>{{(stats['pct']*100.0)|round(1, 'floor')}} %</td>
+        </tr>
+    </table>
+
     <p><i>Note: work is still in progress, so not all card properties or abilities have been trained.</i></p>
 
     <a class="pure-button pure-button-primary" href="/search">Go to the Search Page</a>

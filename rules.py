@@ -1,3 +1,4 @@
+import re
 
 import spacy
 from spacy import displacy
@@ -180,13 +181,18 @@ def create_table(conn):
     conn.execute("""CREATE TABLE cardlabels (
         uuid TEXT,
         labels TEXT,
+        mana TEXT,
+        totalwords INTEGER,
+        labeledwords INTEGER,
+        labeledpct REAL,
         PRIMARY KEY(`uuid`)
     ) """)
 
-def insert(conn, uuid, labels):
+def insert(conn, uuid, analysis):
     conn.execute("""
-    INSERT INTO cardlabels (uuid, labels) VALUES (?,?)
-    """, [uuid, labels])
+    INSERT INTO cardlabels (uuid, labels, mana, totalwords, labeledwords, labeledpct)
+    VALUES (?,?,?,?,?,?)
+    """, [uuid, analysis["labels"], analysis["mana"], analysis["totalwords"], analysis["labeledwords"], analysis["labeledpct"] ])
 
 def clean_label(label):
     pos = label.find(',')
@@ -212,61 +218,43 @@ def run(app, conn):
 
     create_table(conn)
 
-    # Disable 'ner' to remove default Named-Entity Recognition
-    nlp = spacy.load('en_core_web_sm', disable=['ner'])
-    ruler = EntityRuler(nlp, validate=True)
-    ruler.add_patterns(patterns)
-    nlp.add_pipe(ruler)
-
-    cur = conn.cursor()
+    nlp = create_nlp()
 
     ## TODO: MAKE SQL IN BATCHES
     data_to_save = []
 
+    cur = conn.cursor()
+
     for cardKey in list(data.keys()):
         card = data[cardKey]
         if 'text' in card:
-            name = card['name']
-
-            t = clean_text(card['text'], name)
-            doc = nlp(t)
-
-            labels = set([clean_label(ent.label_) for ent in doc.ents])
-            labelsStr = ', '.join(str(e) for e in labels)
-
-            insert(cur, card["uuid"], labelsStr)
+            analysis = get_card_analysis(nlp, card, False)
+            insert(cur, card["uuid"], analysis)
         else:
-            insert(cur, card["uuid"], "")
-
-            #
-            # https://docs.python.org/2/library/sqlite3.html#sqlite3-controlling-transactions
-            #
-
-            #for token in doc:
-            #    print(token.text, token.lemma_, token.pos_, token.dep_)
-            #print([(ent.text, ent.label_) for ent in doc.ents])
-
-            #displacy.render(doc, style='dep')
-            #displacy.render(doc, style='ent')
-            
+            insert(cur, card["uuid"], analysis)
 
     conn.commit()
 
 def analize(app, conn, uuid):
     import json
-    import re
 
     cur = conn.cursor()
     cur.execute("SELECT * FROM cards WHERE uuid = ?", [uuid])
     cards = cur.fetchall()
     card = cards[0]
 
+    return get_card_analysis(create_nlp(), card, True)
+
+def create_nlp():
     # Disable 'ner' to remove default Named-Entity Recognition
     nlp = spacy.load('en_core_web_sm', disable=['ner'])
     ruler = EntityRuler(nlp, validate=True)
     ruler.add_patterns(patterns)
     nlp.add_pipe(ruler)
 
+    return nlp    
+
+def get_card_analysis(nlp, card, forDisplay):
     name = card['name']
     t = clean_text(card['text'], name)
     doc = nlp(t)
@@ -299,17 +287,27 @@ def analize(app, conn, uuid):
         }
         tokens.append(token)
 
-    mana = []
-    if card["manaCost"] is not None:
+    manaStr = ""
+    try:
         manaregex = re.compile(r"{(\w)}", re.IGNORECASE)
         mana = manaregex.findall(card["manaCost"])
+        manaStr = ','.join(m for m in mana)
+    except:
+        pass
+
+    display_ent = None
+    display_dep = None
+    if forDisplay:
+        display_ent = displacy.render(doc, style='ent')
+        display_dep = displacy.render(doc, style='dep')
+
     return {
         "card": card,
         "doc": tokens,
         "labels": labelsStr,
-        "display_ent": displacy.render(doc, style='ent'),
-        "display_dep": displacy.render(doc, style='dep'),
-        "mana": mana,
+        "display_ent": display_ent,
+        "display_dep": display_dep,
+        "mana": manaStr,
         "totalwords": totalwords,
         "labeledwords": labeledwords,
         "labeledpct": labeledpct

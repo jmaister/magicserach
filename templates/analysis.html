@@ -11,7 +11,7 @@
         <div class="cardinfo">
             <p><b>Name:</b> {{analysis.card['name']}}</p>
             <p><b>Mana:</b> 
-                {% for m in analysis.mana %}
+                {% for m in analysis.mana.split(",") %}
                     <img class="icon" src="/img/{{m}}.svg" >
                 {% endfor %}
                 / <b>CMC:</b> {{analysis.card['convertedManaCost']}}

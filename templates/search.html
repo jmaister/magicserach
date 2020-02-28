@@ -45,8 +45,8 @@
     <h3>{{rows|length}} Results:</h3>
     {% for row in rows %}
     <div class="pure-g result-card" id="{{row['uuid']}}">
-      <div class="pure-u-2-5 cardname">
-        <a href="analize/{{row['uuid']}}">{{row['name']}}</a>
+      <div class="pure-u-1-5 cardname">
+        <a class="pure-button" href="analize/{{row['uuid']}}">🔗 {{row['name']}}</a>
       </div>
       <div class="pure-u-1-5">
         Colors: [
@@ -60,7 +60,10 @@
         {% endif %}
         ]
       </div>
-      <div class="pure-u-2-5">{{row['labels']}}</div>
+      <div class="pure-u-1-5">Mana [{% for m in row['mana'].split(',') %}
+        <img class="icon" src="/img/{{m}}.svg" >
+    {% endfor %}]</div>
+      <div class="pure-u-2-5">{{row["labeledpct"]|round(1, 'floor')}}% ({{row["labeledwords"]}} of {{row["totalwords"]}} words) {{row['labels']}}</div>
       <div class="pure-u-1  cardtext">{{row['text']}}</div>
     </div>
     {% endfor%}
