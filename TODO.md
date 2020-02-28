@@ -41,3 +41,11 @@ Invert
 
 Revival / Revenge
 convertedManaCost 	8.0 ?
+
+# Stats queries
+
+## Action stats
+
+select count(*), type from history
+group by type
+

@@ -35,11 +35,18 @@ patterns = [
     {"label": "ON_DISCARD_CARD", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "discard"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
     {"label": "DISCARD_CARD,A", "pattern": [{"LEMMA": "discard"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
     {"label": "DISCARD_CARD,B", "pattern": [{"LEMMA": "discard"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
+    {"label": "DISCARD_CARD,C", "pattern": create_pattern("discard all the card in Ltheir hand")},
+    {"label": "DISCARD_CARD,D", "pattern": create_pattern("discard Lyour hand")},
+    {"label": "DISCARD_CARD,E", "pattern": create_pattern("that player discard that card")},
 
     {"label": "ON_DAMAGE", "pattern": [{"LEMMA": "whenever"}, {"ORTH": "/name/"}, {"LEMMA": "deal"}, {"LEMMA": "damage"}]},
-    {"label": "ON_ATTACK", "pattern": [{"LEMMA": "whenever"}, {"ORTH": "/name/"}, {"LEMMA": "attack"}]},
+    {"label": "ON_ATTACK,A", "pattern": [{"LEMMA": "whenever"}, {"ORTH": "/name/"}, {"LEMMA": "attack"}]},
+    {"label": "ON_ATTACK,B", "pattern": create_pattern("whenever a ? token Lyou control with power N or great attack")},
+
     {"label": "ON_ENTER,A", "pattern": [{"LEMMA": "when"}, {"ORTH": "/name/"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
     {"label": "ON_ENTER,B", "pattern": create_pattern("as /name/ enter the battlefield")},
+    {"label": "ON_ENTER,C", "pattern": create_pattern("each other ? ? ? creature Lyou control enter the battlefield")},
+
     {"label": "ON_DIE,A", "pattern": [{"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
     {"label": "ON_DIE,B", "pattern": [{"LEMMA": "whenever"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LOWER": "you"}, {"LEMMA": "control"}, {"LEMMA": "die"}]},
     {"label": "ON_DIE,C", "pattern": [{"LEMMA": "when"}, {"ORTH": "/name/"}, {"LEMMA": "die"}]},
@@ -54,9 +61,16 @@ patterns = [
     # TODO: "Daxos, Blessed by the Sun": Whenever another creature you control enters the battlefield or dies
     # TODO: "Pelt Collector": Whenever another creature you control enters the battlefield or dies
 
+    {"label": "ON_END_STEP,A", "pattern": create_pattern("at the beginning of Lyour end step")},
+    {"label": "ON_UPKEEP_STEP,A", "pattern": create_pattern("at the beginning of Lyour upkeep")},
+
     {"label": "ON_CREATURE_ENTER,A", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "another"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
     {"label": "ON_CREATURE_ENTER,B", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "a"}, {"LEMMA": "nontoken"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
     {"label": "ON_CREATURE_ENTER,C", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "a"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
+
+    {"label": "ON_CREATE_CREATURE_TOKEN,A", "pattern": create_pattern("if one or more creature token would be create under Lyour control")},
+
+    {"label": "ON_TAP,A", "pattern": create_pattern("whenever /name/ become tapped")},
 
     {"label": "DAMAGE_OWN,A", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "you"}]},
     {"label": "DAMAGE_CONTROLLER,A", "pattern": [{"ORTH": "/name/"}, {"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "that"}, {"LEMMA": "creature"}, {"LEMMA": "'s"}, {"LEMMA": "controller"} ]},
@@ -65,7 +79,8 @@ patterns = [
     {"label": "DAMAGE_ANY", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "any"}, {"LEMMA": "target"}]},
     {"label": "DAMAGE_CREATURE,A", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "target"}, {"LEMMA": "creature"}] },
     {"label": "DAMAGE_CREATURE,B", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "each"}, {"LEMMA": "other"}, {"LEMMA": "creature"}] },
-    
+    {"label": "DAMAGE_CREATURE,C", "pattern": create_pattern("/name/ deal ? ? damage to target creature") },
+
     {"label": "ON_LIFE_GAIN,A", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "life"}]},
     {"label": "ON_LIFE_GAIN,B", "pattern": [{"LEMMA": "when"}, {"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "life"}]},
 
@@ -82,6 +97,8 @@ patterns = [
     {"label": "SCRY,A", "pattern": create_pattern("Lscry N")},
     {"label": "SCRY,B", "pattern": create_pattern("( look at the top N card of Lyour library , then put any number of Lthem on the bottom of Lyour library and the rest on top in any order . )")},
 
+    {"label": "LOOK_LIBRARY,a", "pattern": create_pattern("look at the top N card of Lyour library")},
+
     {"label": "DEVOTION_RED", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "red"}]},
     {"label": "DEVOTION_BLACK", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "black"}]},
     {"label": "DEVOTION_BLUE", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "blue"}]},
@@ -90,34 +107,79 @@ patterns = [
     # TODO: devotion to more than one color
     # TODO: remove "devotion" explanation
 
-    {"label": "CREATE_TOKEN,A", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
-    {"label": "CREATE_TOKEN,B", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
+    {"label": "AMASS,A", "pattern": create_pattern("Lamass N")},
+    {"label": "AMASS,B", "pattern": create_pattern("Lamass Lx")},
+    # TODO: capture amass description
+
+    {"label": "AFTERLIFE,A", "pattern": create_pattern("Lafterlife N")},
+
+
+    {"label": "CREATE_CREATURE_TOKEN,A", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
+    {"label": "CREATE_CREATURE_TOKEN,B", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
+    {"label": "CREATE_CREATURE_TOKEN,C", "pattern": create_pattern("create a number of N ? ? creature token")},
+    {"label": "CREATE_CREATURE_TOKEN,D", "pattern": create_pattern("create that many N ? ? creature token")},
+    {"label": "CREATE_CREATURE_TOKEN,E", "pattern": create_pattern("create Lx N ? ? creature token")},
+    {"label": "CREATE_CREATURE_TOKEN,F", "pattern": create_pattern("that many N ? ? creature token")},
+    {"label": "CREATE_CREATURE_TOKEN,G", "pattern": create_pattern("create an ? ? ? creature token")},
+    {"label": "CREATE_CREATURE_TOKEN,H", "pattern": create_pattern("create a N ? ? ? ? ? creature token")},
+    {"label": "CREATE_CREATURE_TOKEN,I", "pattern": create_pattern("create N N ? ? ? ? ? creature token")},
+    {"label": "CREATE_CREATURE_TOKEN,J", "pattern": create_pattern("create a ? ? ? creature token with")},
+
 
     {"label": "CREATE_FOOD_TOKEN,A", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LOWER": "food"}, {"LEMMA": "token"}]},
     {"label": "CREATE_FOOD_TOKEN,B", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LEMMA": "number"}, {"LEMMA": "of"}, {"LOWER": "food"}, {"LEMMA": "token"}]},
     {"label": "CREATE_FOOD_TOKEN,C", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LOWER": "food"}, {"LEMMA": "token"}]},
+    {"label": "CREATE_FOOD_TOKEN,D", "pattern": create_pattern("( a Lfood token be an artifact with \" { 2 } , { T } , Sacrifice this artifact : Lyou gain 3 life . \" )")},
+    {"label": "CREATE_FOOD_TOKEN,E", "pattern": create_pattern("( Lit be an artifact with \" { 2 } , { T } , Sacrifice this artifact : Lyou gain 3 life . \" )")},
+    {"label": "ON_SACRIFICE_FOOD_TOKEN,A", "pattern": create_pattern("whenever Lyou sacrifice a food")},
 
     {"label": "GRAVEYARD_TO_LIBRARY", "pattern": [{"LEMMA": "from"}, {"LOWER": "your"}, {"LEMMA": "graveyard"}, {"LEMMA": "on"}, {"LEMMA": "top"}, {"LEMMA": "of"}, {"LOWER": "your"}, {"LEMMA": "library"},]},
-    {"label": "LIBRARY_TO_GRAVEYARD", "pattern": create_pattern("library into Ltheir graveyard")},
+    {"label": "LIBRARY_TO_GRAVEYARD,A", "pattern": create_pattern("library into Ltheir graveyard")},
+    {"label": "LIBRARY_TO_GRAVEYARD,B", "pattern": create_pattern("put the top N card of Lyour library into Lyour graveyard")},
+    {"label": "LIBRARY_TO_EXILE,a", "pattern": create_pattern("exile the top card of Lyour library")},
+
+
+    {"label": "EXILE_CREATURE,A", "pattern": create_pattern("exile target creature an opponent control")},
+    {"label": "EXILE_CREATURE,B", "pattern": create_pattern("exile target creature")},
 
     {"label": "RIOT", "pattern": [{"LEMMA": "riot"}]},
     {"label": "FLYING", "pattern": [{"LOWER": "flying"}]},
     {"label": "FLASH", "pattern": [{"LOWER": "flash"}]},
-    {"label": "PROLIFERATE", "pattern": [{"LEMMA": "proliferate"}]},
+    {"label": "TRAMPLE", "pattern": [{"LOWER": "trample"}]},
+    {"label": "HASTE", "pattern": [{"LOWER": "haste"}]},
+    
+    {"label": "PROLIFERATE,A", "pattern": [{"LEMMA": "proliferate"}]},
+    {"label": "PROLIFERATE,B", "pattern": create_pattern("( choose any number of permanent and/or player , then give each another counter of each kind already there . )")},
+
     {"label": "LIFELINK", "pattern": [{"LEMMA": "lifelink"}]},
     {"label": "DEATHTOUCH", "pattern": [{"LEMMA": "deathtouch"}]},
     {"label": "VIGILANCE", "pattern": [{"LEMMA": "vigilance"}]},
-    {"label": "REACH", "pattern": [{"LEMMA": "reach"}]},
+    
+    {"label": "REACH,A", "pattern": [{"LEMMA": "reach"}]},
+    {"label": "REACH,B", "pattern": create_pattern("( this creature can block creature with fly . )")},
+    
     {"label": "DEFENDER", "pattern": [{"LOWER": "defender"}]},
     {"label": "FIRST_STRIKE", "pattern": create_pattern("first strike")},
-
+    {"label": "DOUBLE_STRIKE", "pattern": create_pattern("double strike")},
     {"label": "ENTERS_TAPPED", "pattern": [{"ORTH": "/name/"}, {"LEMMA": "enters"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}, {"LEMMA": "tap"}]},
+    
+    {"label": "HEXPROOF,A", "pattern": create_pattern("hexproof")},
+    {"label": "HEXPROOF,B", "pattern": create_pattern("can not be the target of spell or Labilities Lyour opponent control . )")},
+
+    {"label": "CONVOKE,A", "pattern": create_pattern("Lconvoke")},
+    {"label": "CONVOKE,B", "pattern": create_pattern("( Lyour creature can help cast this spell . each creature Lyou tap while cast this spell pay for { 1 } or one mana of that creature 's color . )")},
+    # TODO: capture convoke explanation
 
     {"label": "RETURN_TO_HAND,A", "pattern": create_pattern("return /name/ to Lyour hand")},
+    {"label": "RETURN_TO_HAND,B", "pattern": create_pattern("Lreturn target nonland permanent to Lits owner 's hand")},
 
     {"label": "ADAMANT", "pattern": create_pattern("adamant — if at least three ? mana Lwas Lspent to cast this spell")},
 
     {"label": "REDUCED_MANA_COST", "pattern": create_pattern("without pay Ltheir mana cost")},
+
+    {"label": "SAGA", "pattern": create_pattern("as this Lsaga enter and after Lyour draw step , add a lore counter . sacrifice after")},
+
+    {"label": "GAIN_CONTROL_CREATURE", "pattern": create_pattern("gain control of target creature")},
 
 ]
 
@@ -188,6 +250,7 @@ def create_table(conn):
     conn.execute("""CREATE TABLE cardlabels (
         uuid TEXT,
         labels TEXT,
+        all_labels TEXT,
         mana TEXT,
         totalwords INTEGER,
         labeledwords INTEGER,
@@ -197,9 +260,9 @@ def create_table(conn):
 
 def insert(conn, uuid, analysis):
     conn.execute("""
-    INSERT INTO cardlabels (uuid, labels, mana, totalwords, labeledwords, labeledpct)
-    VALUES (?,?,?,?,?,?)
-    """, [uuid, analysis["labels"], analysis["mana"], analysis["totalwords"], analysis["labeledwords"], analysis["labeledpct"] ])
+    INSERT INTO cardlabels (uuid, labels, all_labels, mana, totalwords, labeledwords, labeledpct)
+    VALUES (?,?,?,?,?,?,?)
+    """, [uuid, analysis["labels"], analysis["all_labels"], analysis["mana"], analysis["totalwords"], analysis["labeledwords"], analysis["labeledpct"] ])
 
 def clean_label(label):
     pos = label.find(',')
@@ -271,12 +334,13 @@ def get_card_analysis(nlp, card, forDisplay):
     labeledwords = 0
     for token in doc:
         #print(token.text, token.lemma_, token.pos_, token.dep_, token.ent_type_)
-        if len(token.ent_type_) > 0 or token.pos_ == "PUNCT":
+        if len(token.ent_type_) > 0 or token.pos_ == "PUNCT" or token.pos_ == "SPACE":
             labeledwords += 1
     labeledpct = (labeledwords / totalwords) * 100.0
 
     labels = set([clean_label(ent.label_) for ent in doc.ents])
     labelsStr = ', '.join(str(e) for e in labels)
+    all_labels = ','.join(set([ent.label_ for ent in doc.ents]))
 
     tokens = []
     for token in doc:
@@ -312,6 +376,7 @@ def get_card_analysis(nlp, card, forDisplay):
         "card": card,
         "doc": tokens,
         "labels": labelsStr,
+        "all_labels": all_labels,
         "display_ent": display_ent,
         "display_dep": display_dep,
         "mana": manaStr,

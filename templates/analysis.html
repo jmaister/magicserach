@@ -10,15 +10,19 @@
         </div>
         <div class="cardinfo">
             <p><b>Name:</b> {{analysis.card['name']}}</p>
-            <p><b>Mana:</b> 
-                {% for m in analysis.mana.split(",") %}
-                    <img class="icon" src="/img/{{m}}.svg" >
-                {% endfor %}
+            <p><b>Mana:</b>
+                {% if analysis.mana != "" %}
+                    {% for m in analysis.mana.split(",") %}
+                        <img class="icon" src="/img/{{m}}.svg" >
+                    {% endfor %}
+                {% else %}
+                    n/a
+                {% endif %}
                 / <b>CMC:</b> {{analysis.card['convertedManaCost']}}
             </p>
             <p><b>Text:</b> {{analysis.display_ent|safe}} </p>
             <p><b>TAGS:</b> {{analysis.labels}}</p>
-            <p><b>Analysis coverage:</b> {{analysis.labeledpct|round(1, 'floor')}}% ({{analysis.labeledwords}} of {{analysis.totalwords}} words) </p>
+            <p><b>Analysis coverage of this card:</b> {{analysis.labeledpct|round(1, 'floor')}}% ({{analysis.labeledwords}} of {{analysis.totalwords}} text tokens) </p>
         
         </div>
     </div>

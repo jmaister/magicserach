@@ -15,3 +15,16 @@ def get_db(g):
     if not hasattr(g, 'sqlite_db'):
         g.sqlite_db = connect_db()
     return g.sqlite_db
+
+
+def save_history(request, conn, htype, data):
+
+    ip = request.remote_addr
+    if "X-Real-IP" in request.headers:
+        ip = request.headers['X-Real-IP']
+    
+    conn.execute("""
+        INSERT INTO history (data, type, remote_addr, url)
+        VALUES (?, ?, ?, ?)
+    """, [data, htype, ip, request.url])
+    conn.commit()

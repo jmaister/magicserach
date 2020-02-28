@@ -12,16 +12,21 @@ import database
 import rules
 
 import time
+import json
+
+def get_stats(conn):
+    cur = conn.cursor()
+    cur.execute("""select count(*) as cards, sum(totalwords) as t, sum(labeledwords) as l, (sum(labeledwords)*1.0)/sum(totalwords) as pct from cardlabels""")
+    stats = cur.fetchall()[0]
+    return stats
 
 
 @app.route("/")
 def main():
     conn = database.get_db(g)
-    save_history(request, conn, "INDEX", "")
+    database.save_history(request, conn, "INDEX", "")
 
-    cur = conn.cursor()
-    cur.execute("""select count(*) as cards, sum(totalwords) as t, sum(labeledwords) as l, (sum(labeledwords)*1.0)/sum(totalwords) as pct from cardlabels""")
-    stats = cur.fetchall()[0]
+    stats = get_stats(conn)
 
     conn.close()
 
@@ -35,7 +40,7 @@ def get_search():
     searchstr = json.dumps(request.form)
     app.logger.info("Search [%s]", searchstr)
 
-    save_history(request, conn, "SEARCH", searchstr)
+    database.save_history(request, conn, "SEARCH", searchstr)
 
     sql = """SELECT * FROM cards AS c, cardlabels AS cl
              WHERE c.uuid = cl.uuid """
@@ -112,9 +117,16 @@ def run_rules():
     start_time = time.time()
 
     conn = database.get_db(g)
-    save_history(request, conn, "RUN_RULES", "")
+    database.save_history(request, conn, "RUN_RULES", "")
 
     rules.run(app, conn)
+
+    stats = get_stats(conn)
+    statsObj = {}
+    for k in stats.keys():
+        statsObj[k] = stats[k]
+    database.save_history(request, conn, "RUN_RULES_RESULT", json.dumps(statsObj))
+
     conn.close()
 
     elapsed_time = time.time() - start_time
@@ -141,7 +153,7 @@ def setup():
 @app.route("/analize/<uuid>")
 def analize_uuid(uuid):
     conn = database.get_db(g)
-    save_history(request, conn, "ANALYZE", uuid)
+    database.save_history(request, conn, "ANALYZE", uuid)
 
     analysis = rules.analize(app, conn, uuid)
     return render_template('analysis.html', analysis=analysis)
@@ -155,20 +167,6 @@ def history():
     """, [])
     rows = cur.fetchall()
     return render_template('history.html', history=rows)
-
-
-
-def save_history(request, conn, htype, data):
-
-    ip = request.remote_addr
-    if "X-Real-IP" in request.headers:
-        ip = request.headers['X-Real-IP']
-    
-    conn.execute("""
-        INSERT INTO history (data, type, remote_addr, url)
-        VALUES (?, ?, ?, ?)
-    """, [data, htype, ip, request.url])
-    conn.commit()
 
 
 if __name__ == "__main__":
