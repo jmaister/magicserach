@@ -97,6 +97,10 @@ def get_search():
                     sql += "1=0"
                 sql += ")"
 
+    sql += " ORDER BY name "
+    # DEBUG
+    #sql += " ORDER BY labeledpct ASC "
+
     app.logger.info("sql: [%s]", sql)
     app.logger.info("params: [%s]", params)
     cur = conn.cursor()
