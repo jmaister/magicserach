@@ -31,6 +31,7 @@ patterns = [
     
     {"label": "DRAW_CARD,A", "pattern": [{"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
     {"label": "DRAW_CARD,B", "pattern": [{"LEMMA": "draw"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
+    {"label": "DRAW_CARD,C", "pattern": create_pattern("each player draw Lx card")},
 
     {"label": "ON_DISCARD_CARD", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "discard"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
     {"label": "DISCARD_CARD,A", "pattern": [{"LEMMA": "discard"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
@@ -63,6 +64,8 @@ patterns = [
 
     {"label": "ON_END_STEP,A", "pattern": create_pattern("at the beginning of Lyour end step")},
     {"label": "ON_UPKEEP_STEP,A", "pattern": create_pattern("at the beginning of Lyour upkeep")},
+    {"label": "ON_COMBAT_STEP,A", "pattern": create_pattern("at the beginning of combat on Lyour turn")},
+
 
     {"label": "ON_CREATURE_ENTER,A", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "another"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
     {"label": "ON_CREATURE_ENTER,B", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "a"}, {"LEMMA": "nontoken"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
@@ -71,6 +74,7 @@ patterns = [
     {"label": "ON_CREATE_CREATURE_TOKEN,A", "pattern": create_pattern("if one or more creature token would be create under Lyour control")},
 
     {"label": "ON_TAP,A", "pattern": create_pattern("whenever /name/ become tapped")},
+    {"label": "TAP_CREATURE,A", "pattern": create_pattern("tap target creature an opponent control")},
 
     {"label": "DAMAGE_OWN,A", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "you"}]},
     {"label": "DAMAGE_CONTROLLER,A", "pattern": [{"ORTH": "/name/"}, {"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "that"}, {"LEMMA": "creature"}, {"LEMMA": "'s"}, {"LEMMA": "controller"} ]},
@@ -97,8 +101,6 @@ patterns = [
     {"label": "SCRY,A", "pattern": create_pattern("Lscry N")},
     {"label": "SCRY,B", "pattern": create_pattern("( look at the top N card of Lyour library , then put any number of Lthem on the bottom of Lyour library and the rest on top in any order . )")},
 
-    {"label": "LOOK_LIBRARY,a", "pattern": create_pattern("look at the top N card of Lyour library")},
-
     {"label": "DEVOTION_RED", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "red"}]},
     {"label": "DEVOTION_BLACK", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "black"}]},
     {"label": "DEVOTION_BLUE", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "blue"}]},
@@ -112,7 +114,6 @@ patterns = [
     # TODO: capture amass description
 
     {"label": "AFTERLIFE,A", "pattern": create_pattern("Lafterlife N")},
-
 
     {"label": "CREATE_CREATURE_TOKEN,A", "pattern": [{"LEMMA": "create"}, {"LEMMA": "a"}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
     {"label": "CREATE_CREATURE_TOKEN,B", "pattern": [{"LEMMA": "create"}, {"LIKE_NUM": True}, {"LIKE_NUM": True}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"OP": "?"}, {"LEMMA": "creature"}, {"LEMMA": "token"}]},
@@ -138,12 +139,15 @@ patterns = [
     {"label": "LIBRARY_TO_GRAVEYARD,B", "pattern": create_pattern("put the top N card of Lyour library into Lyour graveyard")},
     {"label": "LIBRARY_TO_EXILE,a", "pattern": create_pattern("exile the top card of Lyour library")},
 
-
     {"label": "EXILE_CREATURE,A", "pattern": create_pattern("exile target creature an opponent control")},
     {"label": "EXILE_CREATURE,B", "pattern": create_pattern("exile target creature")},
 
-    {"label": "RIOT", "pattern": [{"LEMMA": "riot"}]},
-    {"label": "FLYING", "pattern": [{"LOWER": "flying"}]},
+    {"label": "RIOT,A", "pattern": create_pattern("riot")},
+    {"label": "RIOT,B", "pattern": create_pattern("( this creature enter the battlefield with Lyour choice of a +1/+1 counter or haste . )")},
+
+    {"label": "FLYING,A", "pattern": create_pattern("Lflying ( this creature can not be block except by creature with fly or reach . )")},
+    {"label": "FLYING,Z", "pattern": [{"LOWER": "flying"}]},
+
     {"label": "FLASH", "pattern": [{"LOWER": "flash"}]},
     {"label": "TRAMPLE", "pattern": [{"LOWER": "trample"}]},
     {"label": "HASTE", "pattern": [{"LOWER": "haste"}]},
@@ -158,11 +162,24 @@ patterns = [
     {"label": "REACH,A", "pattern": [{"LEMMA": "reach"}]},
     {"label": "REACH,B", "pattern": create_pattern("( this creature can block creature with fly . )")},
     
-    {"label": "DEFENDER", "pattern": [{"LOWER": "defender"}]},
+    
+    {"label": "INDESTRUCTIBLE", "pattern": create_pattern("Lindestructible")},
+    {"label": "DEFENDER", "pattern": create_pattern("Ldefender")},
     {"label": "FIRST_STRIKE", "pattern": create_pattern("first strike")},
     {"label": "DOUBLE_STRIKE", "pattern": create_pattern("double strike")},
     {"label": "ENTERS_TAPPED", "pattern": [{"ORTH": "/name/"}, {"LEMMA": "enters"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}, {"LEMMA": "tap"}]},
-    
+    {"label": "MENACE", "pattern": create_pattern("Lmenace ( this creature can not be block except by two or more creature . )")},
+
+    {"label": "SURVEIL,A", "pattern": create_pattern("Lsurveil N . ( look at the top two card of Lyour library , then put any number of Lthem into Lyour graveyard and the rest on top of Lyour library in any order . )")},
+    {"label": "SURVEIL,B", "pattern": create_pattern("Lsurveil 1 . ( look at the top card of Lyour library . Lyou may put that card into Lyour graveyard . )")},
+    {"label": "SURVEIL,C", "pattern": create_pattern("( to surveil N , look at the top N card of Lyour library , then put any number of Lthem into Lyour graveyard and the rest on top of Lyour library in any order . )")},
+    {"label": "SURVEIL,D", "pattern": create_pattern("Lsurveil 1 . ( look at the top card of Lyour library . Lyou may put Lit into Lyour graveyard . )")},
+    {"label": "SURVEIL,F", "pattern": create_pattern("Lsurveil N . ( look at the top N card of Lyour library , then put any number of Lthem into Lyour graveyard and the rest on the top of Lyour library in any order . )")},
+    {"label": "SURVEIL,G", "pattern": create_pattern("Lsurveil N")},
+    {"label": "ON_SURVEIL,A", "pattern": create_pattern("each time Lyou surveil")},
+    {"label": "ON_SURVEIL,B", "pattern": create_pattern("whenever Lyou surveil")},
+    {"label": "ON_SURVEIL,C", "pattern": create_pattern("as long as Lyou have Lsurveilled this turn")},
+
     {"label": "HEXPROOF,A", "pattern": create_pattern("hexproof")},
     {"label": "HEXPROOF,B", "pattern": create_pattern("can not be the target of spell or Labilities Lyour opponent control . )")},
 
@@ -172,14 +189,47 @@ patterns = [
 
     {"label": "RETURN_TO_HAND,A", "pattern": create_pattern("return /name/ to Lyour hand")},
     {"label": "RETURN_TO_HAND,B", "pattern": create_pattern("Lreturn target nonland permanent to Lits owner 's hand")},
+    {"label": "RETURN_TO_HAND,C", "pattern": create_pattern("return /name/ to Lits owner 's hand")},
+    {"label": "RETURN_TO_HAND,D", "pattern": create_pattern("return target creature to Lits owner 's hand")},
+
 
     {"label": "ADAMANT", "pattern": create_pattern("adamant — if at least three ? mana Lwas Lspent to cast this spell")},
 
-    {"label": "REDUCED_MANA_COST", "pattern": create_pattern("without pay Ltheir mana cost")},
+    {"label": "MANA_COST_REDUCED,A", "pattern": create_pattern("without pay Ltheir mana cost")},
+    {"label": "MANA_COST_REDUCED,B", "pattern": create_pattern("this spell cost { N } less to cast")},
+    {"label": "MANA_COST_REDUCED,C", "pattern": create_pattern("enchantment spell Lyou cast cost { N } less to cast")},
+    {"label": "MANA_COST_REDUCED,D", "pattern": create_pattern("spell Lyou cast cost { N } less to cast")},
+    {"label": "MANA_COST_REDUCED,E", "pattern": create_pattern("spell Lyou cast with convert mana cost N or ? cost { N } less to cast")},
+    {"label": "MANA_COST_REDUCED,F", "pattern": create_pattern("Lthey cost { N } less to cast")},
+
+    {"label": "MANA_COST_INCREASED,A", "pattern": create_pattern("Lspells Lyour opponent cast that target /name/ cost { N } more to cast")},
 
     {"label": "SAGA", "pattern": create_pattern("as this Lsaga enter and after Lyour draw step , add a lore counter . sacrifice after")},
 
     {"label": "GAIN_CONTROL_CREATURE", "pattern": create_pattern("gain control of target creature")},
+
+    {"label": "CREATURE_BONUS_END_TURN,A", "pattern": create_pattern("other ? Lyou control get ? until end of turn")},
+    {"label": "CREATURE_BONUS_END_TURN,B", "pattern": create_pattern("target creature Lyou control get ? until end of turn")},
+    {"label": "CREATURE_BONUS_END_TURN,C", "pattern": create_pattern("creature Lyou control get ? until end of turn")},
+    {"label": "CREATURE_BONUS_END_TURN,D", "pattern": create_pattern("until end of turn , creature Lyou control get ?")},
+    {"label": "CREATURE_BONUS_END_TURN,D", "pattern": create_pattern("/name/ get ? until end of turn")},
+
+    {"label": "CREATURE_BONUS,A", "pattern": create_pattern("other ? Lyou control get ?")},
+    {"label": "CREATURE_BONUS,B", "pattern": create_pattern("creature Lyou control get ?")},
+    {"label": "CREATURE_BONUS,C", "pattern": create_pattern("Lcreatures Lyou control get ?")},
+    {"label": "CREATURE_BONUS,D", "pattern": create_pattern("another target ? Lyou control get ?")},
+    # TODO: Tower Defense: check get +1/+1 and gains ...
+    # TODO: Gruul Beastmaster: check +X/+0
+    # TODO: Burning-Yard Trainer: +2+/2 and gains haste until...
+
+    {"label": "CREATURE_MALUS_END_TURN,A", "pattern": create_pattern("target creature get ? until end of turn")},
+    {"label": "CREATURE_MALUS_END_TURN,B", "pattern": create_pattern("all creature get ? until end of turn")},
+
+    {"label": "CREATURE_MALUS,A", "pattern": create_pattern("creature Lyour opponent control get ?")},
+
+    {"label": "DESTROY_CREATURE,A", "pattern": create_pattern("destroy target creature")},
+
+    {"label": "ANY_NUMBER_OF_CARDS,A", "pattern": create_pattern("a deck can have any number of card name ?")},
 
 ]
 
