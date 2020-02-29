@@ -27,7 +27,8 @@ def create_pattern(str):
 patterns = [
     
     {"label": "ON_DRAW_CARD,A", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
-    {"label": "ON_DRAW_CARD,b", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "second"}, {"LEMMA": "card"}]},
+    {"label": "ON_DRAW_CARD,B", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "second"}, {"LEMMA": "card"}]},
+    {"label": "ON_DRAW_CARD,C", "pattern": create_pattern("whenever Lyou draw Lyour second card each turn")},
     
     {"label": "DRAW_CARD,A", "pattern": [{"LEMMA": "draw"}, {"LEMMA": "a"}, {"LEMMA": "card"}]},
     {"label": "DRAW_CARD,B", "pattern": [{"LEMMA": "draw"}, {"LIKE_NUM": True}, {"LEMMA": "card"}]},
@@ -66,7 +67,6 @@ patterns = [
     {"label": "ON_UPKEEP_STEP,A", "pattern": create_pattern("at the beginning of Lyour upkeep")},
     {"label": "ON_COMBAT_STEP,A", "pattern": create_pattern("at the beginning of combat on Lyour turn")},
 
-
     {"label": "ON_CREATURE_ENTER,A", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "another"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
     {"label": "ON_CREATURE_ENTER,B", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "a"}, {"LEMMA": "nontoken"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
     {"label": "ON_CREATURE_ENTER,C", "pattern": [{"LEMMA": "whenever"}, {"LEMMA": "a"}, {"LEMMA": "creature"}, {"LEMMA": "enter"}, {"LEMMA": "the"}, {"LEMMA": "battlefield"}]},
@@ -75,6 +75,7 @@ patterns = [
 
     {"label": "ON_TAP,A", "pattern": create_pattern("whenever /name/ become tapped")},
     {"label": "TAP_CREATURE,A", "pattern": create_pattern("tap target creature an opponent control")},
+    {"label": "TAP_CREATURE,B", "pattern": create_pattern("tap another target creature")},
 
     {"label": "DAMAGE_OWN,A", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "you"}]},
     {"label": "DAMAGE_CONTROLLER,A", "pattern": [{"ORTH": "/name/"}, {"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "that"}, {"LEMMA": "creature"}, {"LEMMA": "'s"}, {"LEMMA": "controller"} ]},
@@ -150,7 +151,9 @@ patterns = [
 
     {"label": "FLASH", "pattern": [{"LOWER": "flash"}]},
     {"label": "TRAMPLE", "pattern": [{"LOWER": "trample"}]},
-    {"label": "HASTE", "pattern": [{"LOWER": "haste"}]},
+    
+    {"label": "HASTE,A", "pattern": create_pattern("Lhaste ( this creature can attack and { t } as soon as Lit come under Lyour control . )")},
+    {"label": "HASTE,Z", "pattern": [{"LOWER": "haste"}]},
     
     {"label": "PROLIFERATE,A", "pattern": [{"LEMMA": "proliferate"}]},
     {"label": "PROLIFERATE,B", "pattern": create_pattern("( choose any number of permanent and/or player , then give each another counter of each kind already there . )")},
@@ -218,6 +221,7 @@ patterns = [
     {"label": "CREATURE_BONUS,B", "pattern": create_pattern("creature Lyou control get ?")},
     {"label": "CREATURE_BONUS,C", "pattern": create_pattern("Lcreatures Lyou control get ?")},
     {"label": "CREATURE_BONUS,D", "pattern": create_pattern("another target ? Lyou control get ?")},
+    {"label": "CREATURE_BONUS,E", "pattern": create_pattern("/name/ get ? for each")},
     # TODO: Tower Defense: check get +1/+1 and gains ...
     # TODO: Gruul Beastmaster: check +X/+0
     # TODO: Burning-Yard Trainer: +2+/2 and gains haste until...
@@ -228,9 +232,12 @@ patterns = [
     {"label": "CREATURE_MALUS,A", "pattern": create_pattern("creature Lyour opponent control get ?")},
 
     {"label": "DESTROY_CREATURE,A", "pattern": create_pattern("destroy target creature")},
+    {"label": "DESTROY_ARTIFACT,A", "pattern": create_pattern("destroy target artifact")},
 
     {"label": "ANY_NUMBER_OF_CARDS,A", "pattern": create_pattern("a deck can have any number of card name ?")},
+    {"label": "ANY_NUMBER_OF_CARDS,B", "pattern": create_pattern("a deck can have up to N card name ?")},
 
+    # TODO: counters ... +1/+1 counter ..., with an additional +1/+1 counter on it
 ]
 
 
