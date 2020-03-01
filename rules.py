@@ -64,6 +64,7 @@ patterns = [
     # TODO: "Pelt Collector": Whenever another creature you control enters the battlefield or dies
 
     {"label": "ON_END_STEP,A", "pattern": create_pattern("at the beginning of Lyour end step")},
+    {"label": "ON_END_STEP,B", "pattern": create_pattern("at the beginning of the end step")},
     {"label": "ON_UPKEEP_STEP,A", "pattern": create_pattern("at the beginning of Lyour upkeep")},
     {"label": "ON_COMBAT_STEP,A", "pattern": create_pattern("at the beginning of combat on Lyour turn")},
 
@@ -108,7 +109,7 @@ patterns = [
     {"label": "DEVOTION_WHITE", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "white"}]},
     {"label": "DEVOTION_GREEN", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "green"}]},
     # TODO: devotion to more than one color
-    # TODO: remove "devotion" explanation
+    # TODO: remove "devotion" explanation:  (Each {W} in the mana costs of permanents you control counts towards your devotion to white DEVOTION_WHITE .)
 
     {"label": "AMASS,A", "pattern": create_pattern("Lamass N")},
     {"label": "AMASS,B", "pattern": create_pattern("Lamass Lx")},
@@ -195,17 +196,24 @@ patterns = [
     {"label": "RETURN_TO_HAND,C", "pattern": create_pattern("return /name/ to Lits owner 's hand")},
     {"label": "RETURN_TO_HAND,D", "pattern": create_pattern("return target creature to Lits owner 's hand")},
 
-
-    {"label": "ADAMANT", "pattern": create_pattern("adamant — if at least three ? mana Lwas Lspent to cast this spell")},
-
     {"label": "MANA_COST_REDUCED,A", "pattern": create_pattern("without pay Ltheir mana cost")},
     {"label": "MANA_COST_REDUCED,B", "pattern": create_pattern("this spell cost { N } less to cast")},
     {"label": "MANA_COST_REDUCED,C", "pattern": create_pattern("enchantment spell Lyou cast cost { N } less to cast")},
     {"label": "MANA_COST_REDUCED,D", "pattern": create_pattern("spell Lyou cast cost { N } less to cast")},
     {"label": "MANA_COST_REDUCED,E", "pattern": create_pattern("spell Lyou cast with convert mana cost N or ? cost { N } less to cast")},
     {"label": "MANA_COST_REDUCED,F", "pattern": create_pattern("Lthey cost { N } less to cast")},
+    {"label": "MANA_COST_REDUCED,G", "pattern": create_pattern("this spell cost { X } less to cast")},
+    {"label": "MANA_COST_REDUCED,H", "pattern": create_pattern("without pay Lits mana cost")},
+    {"label": "MANA_COST_REDUCED,I", "pattern": create_pattern("cost { N } less to activate")},
+    # TODO: Return those cards to the battlefield? would be reduced mana cost ?
 
     {"label": "MANA_COST_INCREASED,A", "pattern": create_pattern("Lspells Lyour opponent cast that target /name/ cost { N } more to cast")},
+    {"label": "MANA_COST_INCREASED,B", "pattern": create_pattern("Lyour opponent control cost { N } more to activate")},
+    {"label": "MANA_COST_INCREASED,C", "pattern": create_pattern("Lyour opponent activate cost { N } more to activate")},
+
+    {"label": "SPECTACLE,A", "pattern": create_pattern("Lspectacle { ? } ( Lyou may cast this spell for Lits spectacle cost rather than Lits mana cost if an opponent lose life this turn . )")},
+    {"label": "SPECTACLE,B", "pattern": create_pattern("Lspectacle { ? }")},
+    # TODO: spectable is MANA_COST_REDUCED too !
 
     {"label": "SAGA", "pattern": create_pattern("as this Lsaga enter and after Lyour draw step , add a lore counter . sacrifice after")},
 
@@ -214,8 +222,9 @@ patterns = [
     {"label": "CREATURE_BONUS_END_TURN,A", "pattern": create_pattern("other ? Lyou control get ? until end of turn")},
     {"label": "CREATURE_BONUS_END_TURN,B", "pattern": create_pattern("target creature Lyou control get ? until end of turn")},
     {"label": "CREATURE_BONUS_END_TURN,C", "pattern": create_pattern("creature Lyou control get ? until end of turn")},
-    {"label": "CREATURE_BONUS_END_TURN,D", "pattern": create_pattern("until end of turn , creature Lyou control get ?")},
-    {"label": "CREATURE_BONUS_END_TURN,D", "pattern": create_pattern("/name/ get ? until end of turn")},
+    {"label": "CREATURE_BONUS_END_TURN,E", "pattern": create_pattern("creature Lyou control each get ? until end of turn")},
+    {"label": "CREATURE_BONUS_END_TURN,F", "pattern": create_pattern("until end of turn , creature Lyou control get ?")},
+    {"label": "CREATURE_BONUS_END_TURN,G", "pattern": create_pattern("/name/ get ? until end of turn")},
 
     {"label": "CREATURE_BONUS,A", "pattern": create_pattern("other ? Lyou control get ?")},
     {"label": "CREATURE_BONUS,B", "pattern": create_pattern("creature Lyou control get ?")},
@@ -237,7 +246,10 @@ patterns = [
     {"label": "ANY_NUMBER_OF_CARDS,A", "pattern": create_pattern("a deck can have any number of card name ?")},
     {"label": "ANY_NUMBER_OF_CARDS,B", "pattern": create_pattern("a deck can have up to N card name ?")},
 
-    # TODO: counters ... +1/+1 counter ..., with an additional +1/+1 counter on it
+    {"label": "ESCAPE,A", "pattern": create_pattern("Lescape - ? ? ? ? , Lexile N other card from Lyour graveyard . ( Lyou may cast this card from Lyour graveyard for Lits escape cost . )")},
+    {"label": "ESCAPE,B", "pattern": create_pattern("( Lyou may cast ? ? from Lyour graveyard for ? escape cost . )")},
+    {"label": "ESCAPE,C", "pattern": create_pattern("Lescape - ? ? ? ? ? , Lexile N other card from Lyour graveyard")},
+
 ]
 
 
@@ -335,6 +347,9 @@ def clean_text(text, name):
         if name.find(",") > 0:
             shortname = name[0:name.find(",")]
             text = text.replace(shortname, '/name/')
+
+        # Remove dash
+        text = text.replace('—', ' - ')
     return text
 
 
