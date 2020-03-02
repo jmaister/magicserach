@@ -5,13 +5,13 @@
     <form class="pure-form pure-form-stacked" method="GET" action="/search" >
       <fieldset>
         <label for="format">Format</label>
-        <input id="format" name="format" disabled value="Standard (More are coming...)" />
+        <input type="text" id="format" name="format" disabled value="Standard (More are coming...)" />
 
         <label for="cardname">Name (partial)</label>
-        <input id="cardname" name="cardname" placeholder="Card name" value="{{ request.args['cardname'] }}" />
+        <input type="text" id="cardname" name="cardname" placeholder="Card name" value="{{ request.args['cardname'] }}" />
 
         <label for="text">Text (partial)</label>
-        <input id="text" name="text" placeholder="Card text" value="{{ request.args['text'] }}" />
+        <input type="text" id="text" name="text" placeholder="Card text" value="{{ request.args['text'] }}" />
 
         <div class="pure-g card_tag_box">
           <div class="pure-u-1-1 pure-u-md-1-2">

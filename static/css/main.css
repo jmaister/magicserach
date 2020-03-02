@@ -107,3 +107,7 @@ body {
     width: 80%;
     margin: 0 auto;
 }
+
+form.pure-form input[type="text"] {
+    width: 350px;
+}
