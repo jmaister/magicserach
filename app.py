@@ -32,13 +32,14 @@ def main():
 
     return render_template('index.html', stats=stats)
 
-@app.route("/search", methods = ['GET', 'POST'])
+@app.route("/search", methods = ['GET'])
 def get_search():
     conn = database.get_db(g)
 
     import json
-    searchstr = json.dumps(request.form)
+    searchstr = json.dumps(request.args)
     app.logger.info("Search [%s]", searchstr)
+    app.logger.info("Search2 [%s]", request)
 
     database.save_history(request, conn, "SEARCH", searchstr)
 
@@ -46,31 +47,34 @@ def get_search():
              WHERE c.uuid = cl.uuid """
     params = []
 
-    if request.method == 'POST':
-        if 'cardname' in request.form and request.form['cardname'] != "":
+    if request.method == 'GET':
+        if 'cardname' in request.args and request.args['cardname'] != "":
             sql += "AND lower(c.name) like lower(?) "
-            params.append('%' + request.form['cardname'] + '%')
-        if 'text' in request.form and request.form['text'] != "":
+            params.append('%' + request.args['cardname'] + '%')
+        if 'text' in request.args and request.args['text'] != "":
             sql += "AND lower(c.text) like lower(?) "
-            params.append('%' + request.form['text'] + '%')
-        if 'trigger' in request.form and request.form['trigger'] != "":
+            params.append('%' + request.args['text'] + '%')
+        if 'trigger' in request.args:
+            triggers = request.args.getlist("trigger")
+            app.logger.info("trigger [%s]", triggers)
+            for tr in triggers:
+                sql += "AND lower(cl.labels) like lower(?) "
+                params.append('%' + tr + '%')
+        if 'effect' in request.args and request.args['effect'] != "":
             sql += "AND lower(cl.labels) like lower(?) "
-            params.append('%' + request.form['trigger'] + '%')
-        if 'effect' in request.form and request.form['effect'] != "":
-            sql += "AND lower(cl.labels) like lower(?) "
-            params.append('%' + request.form['effect'] + '%')
+            params.append('%' + request.args['effect'] + '%')
 
-        if 'colormode' in request.form:
-            colormode = request.form['colormode']
+        if 'colormode' in request.args:
+            colormode = request.args['colormode']
             colors = ['R', 'U', 'G', 'W', 'B']
             if colormode == 'any':
                 anyfilter = False
                 sql += "AND ( "
-                if "color_NULL" in request.form:
+                if "color_C" in request.args:
                     sql += "( c.colors IS NULL ) OR "
                     anyfilter = True
                 for c in colors:
-                    if 'color_' + c in request.form:
+                    if 'color_' + c in request.args:
                         sql += "(c.colors like '%" +c+ "%') OR "
                         anyfilter = True
 
@@ -83,11 +87,11 @@ def get_search():
             elif colormode == 'all':
                 anyfilter = False
                 sql += "AND ( "
-                if "color_NULL" in request.form:
+                if "color_C" in request.args:
                     sql += "( c.colors IS NULL ) AND "
                     anyfilter = True
                 for c in colors:
-                    if 'color_' + c in request.form:
+                    if 'color_' + c in request.args:
                         sql += "(c.colors like '%" +c+ "%') AND "
                         anyfilter = True
 

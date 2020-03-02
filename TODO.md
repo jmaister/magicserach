@@ -52,26 +52,17 @@ group by type
 
 # TODO:
 
-## Ravager Wurm
-
- /name/ fights target creature you don't control. • Destroy target land with an activated ability that isn't a mana ability.
-
-## Escape
- 
- Pharika's Spawn
- Escape—{5}{B}, Exile three other cards from your graveyard. (You may cast this card from your graveyard for its escape cost.)
-
-## Jump start
+## Jump start (10)
 
  Jump-start (You may cast this card from your graveyard by discarding a card in addition to paying its other costs. Then exile this card.)
 
-## Create copy 
+## Create copy (24)
 
 Quasiduplicate
 Create a token that's a copy of target creature you control.
 
 
-## Counters 
+## Counters (85)
 
 +1/+1 counter
 with an additional +1/+1 counter on it
@@ -79,15 +70,41 @@ with an additional +1/+1 counter on it
 Woe Strider escapes with two +1/+1 counters on it.
 
 
-## Adamant
+## Adamant (17)
 
 Adamant - if at least...
 
-## Sacrifice
+## Sacrifice (168)
 
 sacrifice /name/
 
-## Fight
+## Fight (20)
 
 Polukranos, Unchained
 {1}{B}{G}: /name/ fights another target creature.
+
+## Counter spell (25)
+
+Counter target spell
+
+## Destroy (105)
+
+Destroy target tapped creature
+Destroy target permanent an opponent controls
+Destroy target creature
+Destroy target artifact
+Destroy target land
+
+# Exile (190)
+
+Exile target card from a graveyard
+
+## Pay more mana (76)
+
+"pays" or "pay"
+
+Quench
+unless its controller pays {2}
+
+Archon of Absolution
+unless their controller pays {1} for 

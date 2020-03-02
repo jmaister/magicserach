@@ -2,44 +2,65 @@
 
 {% block content %}
     <h2>Search</h2>
-    <form class="pure-form" method="POST" action="/search" >
-      <div>Format: <b>Standard (More are coming...)</b></div>
-      <div>Name (partial): <input name="cardname" placeholder="Card name" value="{{ request.form['cardname'] }}" /> </div>
-      <div>Text (partial): <input name="text" placeholder="Card text" value="{{ request.form['text'] }}" /> </div>
-      <div>Card trigger:
-        <select name="trigger">
-          <option value="" {% if request.form['trigger'] == '' %} selected="selected"{% endif %}> - empty -</option>
-          {% for tr in data.triggers|sort %}
-          <option value="{{tr}}" {% if request.form['trigger'] == tr %} selected="selected"{% endif %}>{{tr}}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div>Card effect:
-        <select name="effect">
-          <option value="" {% if request.form['effect'] == '' %} selected="selected"{% endif %}> - empty -</option>
-          {% for tr in data.effects|sort %}
-          <option value="{{tr}}" {% if request.form['effect'] == tr %} selected="selected"{% endif %}>{{tr}}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div>
-        <h3>Color</h3>
-        <div>
-          <select name="colormode">
-            <option value="any" {% if request.form['label'] == 'any' %} selected="selected"{% endif %}>Any of these colors</option>
-            <option value="all" {% if request.form['label'] == 'all' %} selected="selected"{% endif %}>All of these colors</option>
-          </select>
+    <form class="pure-form pure-form-stacked" method="GET" action="/search" >
+      <fieldset>
+        <label for="format">Format</label>
+        <input id="format" name="format" disabled value="Standard (More are coming...)" />
+
+        <label for="cardname">Name (partial)</label>
+        <input id="cardname" name="cardname" placeholder="Card name" value="{{ request.args['cardname'] }}" />
+
+        <label for="text">Text (partial)</label>
+        <input id="text" name="text" placeholder="Card text" value="{{ request.args['text'] }}" />
+
+        <div class="pure-g card_tag_box">
+          <div class="pure-u-1-1 pure-u-md-1-2">
+            <h3>Card triggers</h3>
+            <div class="scroll">
+              {% for tr in data.triggers|sort %}
+              <label for="id_tr_{{tr}}">
+                <input id="id_tr_{{tr}}" type="checkbox" name="trigger" value="{{tr}}" {% if tr in request.args.getlist('trigger') %} checked="true"{% endif %}>{{tr}}</option>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="pure-u-1-1 pure-u-md-1-2">
+            <h3>Card effects</h3>
+            <div class="scroll">
+              {% for tr in data.effects|sort %}
+              <label for="id_ef_{{tr}}" class="pure-checkbox">
+                <input id="id_ef_{{tr}}" type="checkbox" name="effect" value="{{tr}}" {% if tr in request.args.getlist('effect') %} checked="true"{% endif %}>{{tr}}</option>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
         </div>
-        <div>Red: <input type="checkbox" name="color_R" {% if request.form['color_R'] == 'on' %} checked {% endif %}/></div>
-        <div>Blue: <input type="checkbox" name="color_U" {% if request.form['color_U'] == 'on' %} checked {% endif %}/></div>
-        <div>Green: <input type="checkbox" name="color_G" {% if request.form['color_G'] == 'on' %} checked {% endif %}/></div>
-        <div>White: <input type="checkbox" name="color_W" {% if request.form['color_W'] == 'on' %} checked {% endif %}/></div>
-        <div>Black: <input type="checkbox" name="color_B" {% if request.form['color_B'] == 'on' %} checked {% endif %}/></div>
-        <div>Uncolored: <input type="checkbox" name="color_NULL" {% if request.form['color_NULL'] == 'on' %} checked {% endif %}/></div>
-      </div>
-      <p>
-        <button class="pure-button pure-button-primary" type="submit">Search</button>
-      </p>
+
+        <div>
+          <h3>Color</h3>
+          <div>
+            <select name="colormode">
+              <option value="all" {% if request.args['colormode'] == 'all' %} selected="selected"{% endif %}>All of these colors</option>
+              <option value="any" {% if request.args['colormode'] == 'any' %} selected="selected"{% endif %}>Any of these colors</option>
+            </select>
+          </div>
+
+          {% set colors = ['R', 'U', 'G', 'W', 'B', 'C'] %}
+          <div class="pure-g">
+            {% for c in colors %}
+              <div class="pure-u-1-1 pure-u-sm-1-6">
+                <label for="id_color_{{c}}">
+                  <input type="checkbox" id="id_color_{{c}}" name="color_{{c}}" {% if request.args['color_'+c] == 'on' %} checked {% endif %} />
+                  <img class="search_icon" src="/img/{{c}}.svg" >
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <p>
+          <button class="pure-button pure-button-primary" type="submit">Search</button>
+        </p>
+      </fieldset>
     </form>
 
     <h3>{{rows|length}} Results:</h3>
