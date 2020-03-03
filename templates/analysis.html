@@ -8,7 +8,9 @@
     <div class="pure-g cardcontainer">
         <div class="pure-u-1 pure-u-md-1-3">
             {% set i = analysis.card['scryfallId'] %}
-            <img class="cardimage" src="https://img.scryfall.com/cards/normal/front/{{i[0]}}/{{i[1]}}/{{i}}.jpg" >
+            <img class="cardimage"
+                alt="Image of the card"
+                src="https://img.scryfall.com/cards/normal/front/{{i[0]}}/{{i[1]}}/{{i}}.jpg" >
         </div>
         <div class="pure-u-1 pure-u-md-2-3">
             <div class="cardinfo">
@@ -16,7 +18,7 @@
                 <p><b>Mana:</b>
                     {% if analysis.mana != "" %}
                         {% for m in analysis.mana.split(",") %}
-                            <img class="icon" src="/img/{{m}}.svg" >
+                            <img class="icon" alt="Mana icon of color {{m}}" src="/img/{{m}}.svg" >
                         {% endfor %}
                     {% else %}
                         n/a
