@@ -34,3 +34,11 @@
 # CC
 
 Mana color images "CC BY-NC-SA 2.5" from: https://mtg.gamepedia.com/Numbers_and_symbols
+
+
+# Libraries
+
+## Select2
+
+https://select2.org/
+
