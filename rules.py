@@ -77,12 +77,15 @@ patterns = [
     {"label": "ON_TAP,A", "pattern": create_pattern("whenever /name/ become tapped")},
     {"label": "TAP_CREATURE,A", "pattern": create_pattern("tap target creature an opponent control")},
     {"label": "TAP_CREATURE,B", "pattern": create_pattern("tap another target creature")},
+    {"label": "TAP_CREATURE,C", "pattern": create_pattern("tap up to N target creature")},
+    
 
     {"label": "DAMAGE_OWN,A", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "you"}]},
     {"label": "DAMAGE_CONTROLLER,A", "pattern": [{"ORTH": "/name/"}, {"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "that"}, {"LEMMA": "creature"}, {"LEMMA": "'s"}, {"LEMMA": "controller"} ]},
     {"label": "DAMAGE_PLAYERS", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "each"}, {"LEMMA": "player"}]},
     {"label": "DAMAGE_OPPONENT", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LOWER": "each"}, {"LEMMA": "opponent"}]},
-    {"label": "DAMAGE_ANY", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "any"}, {"LEMMA": "target"}]},
+    {"label": "DAMAGE_ANY,A", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "any"}, {"LEMMA": "target"}]},
+    {"label": "DAMAGE_ANY,B", "pattern": create_pattern("/name/ deal N damage to any target")},
     {"label": "DAMAGE_CREATURE,A", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "target"}, {"LEMMA": "creature"}] },
     {"label": "DAMAGE_CREATURE,B", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "each"}, {"LEMMA": "other"}, {"LEMMA": "creature"}] },
     {"label": "DAMAGE_CREATURE,C", "pattern": create_pattern("/name/ deal ? ? damage to target creature") },
@@ -102,6 +105,7 @@ patterns = [
 
     {"label": "SCRY,A", "pattern": create_pattern("Lscry N")},
     {"label": "SCRY,B", "pattern": create_pattern("( look at the top N card of Lyour library , then put any number of Lthem on the bottom of Lyour library and the rest on top in any order . )")},
+    {"label": "SCRY,C", "pattern": create_pattern("( look at the top card of Lyour library . Lyou may put that card on the bottom of Lyour library . )")},
 
     {"label": "DEVOTION_RED", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "red"}]},
     {"label": "DEVOTION_BLACK", "pattern": [{"LOWER": "your"}, {"LEMMA": "devotion"}, {"LEMMA": "to"}, {"LEMMA": "black"}]},
@@ -139,10 +143,60 @@ patterns = [
     {"label": "GRAVEYARD_TO_LIBRARY", "pattern": [{"LEMMA": "from"}, {"LOWER": "your"}, {"LEMMA": "graveyard"}, {"LEMMA": "on"}, {"LEMMA": "top"}, {"LEMMA": "of"}, {"LOWER": "your"}, {"LEMMA": "library"},]},
     {"label": "LIBRARY_TO_GRAVEYARD,A", "pattern": create_pattern("library into Ltheir graveyard")},
     {"label": "LIBRARY_TO_GRAVEYARD,B", "pattern": create_pattern("put the top N card of Lyour library into Lyour graveyard")},
-    {"label": "LIBRARY_TO_EXILE,a", "pattern": create_pattern("exile the top card of Lyour library")},
+    {"label": "LIBRARY_TO_EXILE,A", "pattern": create_pattern("exile the top card of Lyour library")},
+    {"label": "LIBRARY_TO_EXILE,B", "pattern": create_pattern("exile the top N card of Lyour library")},
+    {"label": "GRAVEYARD_TO_HAND,A", "pattern": create_pattern("return /name/ from Lyour graveyard to Lyour hand")},
 
-    {"label": "EXILE_CREATURE,A", "pattern": create_pattern("exile target creature an opponent control")},
-    {"label": "EXILE_CREATURE,B", "pattern": create_pattern("exile target creature")},
+    {"label": "EXILE_TO_GRAVEYARD,A", "pattern": create_pattern("from exile into that player 's graveyard")},
+  
+    {"label": "EXILE,A", "pattern": create_pattern("exile that card from Lyour graveyard")},
+    {"label": "EXILE,B", "pattern": create_pattern("exile that card")},
+    {"label": "EXILE,C", "pattern": create_pattern("( then exile this card . Lyou may cast the creature later from exile . )")},
+    {"label": "EXILE,C2", "pattern": create_pattern("( then exile this spell . Lyou may cast the creature later from exile . )")},
+    {"label": "EXILE,D", "pattern": create_pattern("then that player exile a card from Ltheir hand")},
+    {"label": "EXILE,E", "pattern": create_pattern("Lexile /name/")},
+    {"label": "EXILE,F", "pattern": create_pattern("Lexile /name/ from Lyour graveyard")},
+    {"label": "EXILE,G", "pattern": create_pattern("Lexile target card from a graveyard")},
+    {"label": "EXILE,H", "pattern": create_pattern("Lexile target ? an opponent control")},
+    {"label": "EXILE,I", "pattern": create_pattern("Lexile target opponent 's graveyard")},
+    {"label": "EXILE,J", "pattern": create_pattern("Lexile up to ? ? target card from graveyard")},
+    {"label": "EXILE,K", "pattern": create_pattern("Lexile target card from an opponent 's graveyard")},
+    {"label": "EXILE,L", "pattern": create_pattern("exile target creature with")},
+    {"label": "EXILE,M", "pattern": create_pattern("exile target creature that player control")},
+    {"label": "EXILE,M1", "pattern": create_pattern("exile target permanent Lyou control")},
+    {"label": "EXILE,M2", "pattern": create_pattern("exile up to N other target creature Lyou control")},
+    {"label": "EXILE,N", "pattern": create_pattern("exile target permanent with")},    
+    {"label": "EXILE,O", "pattern": create_pattern("exile target creature or planeswalker")},    
+    {"label": "EXILE,P", "pattern": create_pattern("an opponent exile a nonland card from among Lthem")},
+    {"label": "EXILE,Q", "pattern": create_pattern("Lyou may exile ? ? card from ? graveyard")},
+    {"label": "EXILE,R", "pattern": create_pattern("exile each opponent 's graveyard")},
+    {"label": "EXILE,S", "pattern": create_pattern("each opponent exile the top N card of Ltheir library")},
+    {"label": "EXILE,T", "pattern": create_pattern("exile target creature")},
+    {"label": "EXILE,U", "pattern": create_pattern("exile target creature or enchantment")},
+    {"label": "EXILE,V", "pattern": create_pattern("exile target artifact")},
+    {"label": "EXILE,W", "pattern": create_pattern("exile target enchantment")},
+    {"label": "EXILE,X", "pattern": create_pattern("exile target nonland permanent")},
+    {"label": "EXILE,Y", "pattern": create_pattern("exile enchant creature")},
+    {"label": "EXILE,Z", "pattern": create_pattern("Lyou may exile Lit")},
+    {"label": "EXILE,AA", "pattern": create_pattern("exile Lit instead")},
+    {"label": "EXILE,AB", "pattern": create_pattern("exile another target creature Lyou own")},
+    {"label": "EXILE,AC", "pattern": create_pattern("exile a creature card from Lyour graveyard")},
+    {"label": "EXILE,AD", "pattern": create_pattern("exile target nonland permanent an opponent control")},
+    {"label": "EXILE,AE", "pattern": create_pattern("exile all creature card in all graveyard")},
+    {"label": "EXILE,AF", "pattern": create_pattern("exile that creature until /name/ leave the battlefield")},
+    {"label": "EXILE,AG", "pattern": create_pattern("Lexile N ? card from Lyour graveyard")},
+    {"label": "EXILE,AH", "pattern": create_pattern("Lexile N target card from an opponent 's graveyard")},
+    {"label": "EXILE,AI", "pattern": create_pattern("exile all Lmulticolored permanent")},
+    {"label": "EXILE,AJ", "pattern": create_pattern("exile the top card of Ltheir library")},
+    {"label": "EXILE,AK", "pattern": create_pattern("target player exile a card from Ltheir graveyard")},
+    {"label": "EXILE,AK", "pattern": create_pattern("exile those ? at the beginning of Lyour next end step")},
+    # Continue on T
+
+
+    {"label": "RETURN_TO_HAND,A", "pattern": create_pattern("return /name/ to Lyour hand")},
+    {"label": "RETURN_TO_HAND,B", "pattern": create_pattern("Lreturn target nonland permanent to Lits owner 's hand")},
+    {"label": "RETURN_TO_HAND,C", "pattern": create_pattern("return /name/ to Lits owner 's hand")},
+    {"label": "RETURN_TO_HAND,D", "pattern": create_pattern("return target creature to Lits owner 's hand")},
 
     {"label": "RIOT,A", "pattern": create_pattern("riot")},
     {"label": "RIOT,B", "pattern": create_pattern("( this creature enter the battlefield with Lyour choice of a +1/+1 counter or haste . )")},
@@ -191,11 +245,6 @@ patterns = [
     {"label": "CONVOKE,B", "pattern": create_pattern("( Lyour creature can help cast this spell . each creature Lyou tap while cast this spell pay for { 1 } or one mana of that creature 's color . )")},
     # TODO: capture convoke explanation
 
-    {"label": "RETURN_TO_HAND,A", "pattern": create_pattern("return /name/ to Lyour hand")},
-    {"label": "RETURN_TO_HAND,B", "pattern": create_pattern("Lreturn target nonland permanent to Lits owner 's hand")},
-    {"label": "RETURN_TO_HAND,C", "pattern": create_pattern("return /name/ to Lits owner 's hand")},
-    {"label": "RETURN_TO_HAND,D", "pattern": create_pattern("return target creature to Lits owner 's hand")},
-
     {"label": "MANA_COST_REDUCED,A", "pattern": create_pattern("without pay Ltheir mana cost")},
     {"label": "MANA_COST_REDUCED,B", "pattern": create_pattern("this spell cost { N } less to cast")},
     {"label": "MANA_COST_REDUCED,C", "pattern": create_pattern("enchantment spell Lyou cast cost { N } less to cast")},
@@ -234,6 +283,8 @@ patterns = [
     # TODO: Tower Defense: check get +1/+1 and gains ...
     # TODO: Gruul Beastmaster: check +X/+0
     # TODO: Burning-Yard Trainer: +2+/2 and gains haste until...
+    # TODO: Gift of the Fae: ... and gain
+    #{"label": "CREATURE_BONUS,F", "pattern": create_pattern("target creature get ?")},
 
     {"label": "CREATURE_MALUS_END_TURN,A", "pattern": create_pattern("target creature get ? until end of turn")},
     {"label": "CREATURE_MALUS_END_TURN,B", "pattern": create_pattern("all creature get ? until end of turn")},
@@ -342,14 +393,15 @@ def clean_label(label):
 def clean_text(text, name):
     if text is not None:
         text = text.replace(name, '/name/')
+        text = text.replace("/name/.", "/name/ .")
         # Fix names that contain comma and can be reference as both
         # i.e. "Roalesk, Apex Hybrid"
         if name.find(",") > 0:
             shortname = name[0:name.find(",")]
             text = text.replace(shortname, '/name/')
-
         # Remove dash
         text = text.replace('—', ' - ')
+
     return text
 
 
