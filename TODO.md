@@ -69,6 +69,8 @@ with an additional +1/+1 counter on it
 /name/ escapes with a +1/+1 counter on it.
 Woe Strider escapes with two +1/+1 counters on it.
 
+Polukranos, Unchained
+/name/ enters the battlefield with six +1/+1 counters on it
 
 ## Adamant (17)
 
@@ -108,3 +110,33 @@ unless its controller pays {2}
 
 Archon of Absolution
 unless their controller pays {1} for 
+
+## Reduce damage
+
+Angel of Grace
+When /name/ enters the battlefield ON_ENTER,A , until end of turn, damage that would reduce your life total to less than 1 reduces it to 1 instead.
+
+## Protection
+
+Apostle of Purifying Light
+Protection from black (This creature can't be blocked, targeted, dealt damage, enchanted, or equipped by anything black.)
+
+
+## xxx and yyy, xxx or yyy
+
+Athreos, Shroud-Veiled
+...dies ON_DIE,H or is put into exile
+
+Kroxa, Titan of Death's Hunger
+Whenever /name/ enters the battlefield or attacks
+
+
+## Exile to hand
+
+Bag of Holding
+Return all cards exiled with /name/ to their owner's hand
+
+## Non land mana
+
+Seasonal Ritual
+Add one mana of any color
