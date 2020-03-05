@@ -111,3 +111,7 @@ body {
 form.pure-form input[type="text"] {
     width: 350px;
 }
+
+.tagSelection {
+    height: 150px;
+}
