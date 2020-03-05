@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block head %}
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/styles/choices.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
+{% endblock%}
+
 {% block content %}
     <h2>Search</h2>
     <form class="pure-form pure-form-stacked" method="GET" action="/search" >
@@ -16,23 +24,19 @@
         <div class="pure-g card_tag_box">
           <div class="pure-u-1-1 pure-u-md-1-2">
             <h3>Card triggers</h3>
-            <div class="scroll">
+            <select id="s_trigger" name="trigger" multiple="multiple">
               {% for tr in data.triggers|sort %}
-              <label for="id_tr_{{tr}}">
-                <input id="id_tr_{{tr}}" type="checkbox" name="trigger" value="{{tr}}" {% if tr in request.args.getlist('trigger') %} checked="true"{% endif %}>{{tr}}</option>
-              </label>
+                <option value="{{tr}}" {% if tr in request.args.getlist('trigger') %} selected="selected"{% endif %}>{{tr}}</option>
               {% endfor %}
-            </div>
+            </select>
           </div>
           <div class="pure-u-1-1 pure-u-md-1-2">
             <h3>Card effects</h3>
-            <div class="scroll">
+            <select id="s_effect" name="effect" multiple="multiple">
               {% for tr in data.effects|sort %}
-              <label for="id_ef_{{tr}}" class="pure-checkbox">
-                <input id="id_ef_{{tr}}" type="checkbox" name="effect" value="{{tr}}" {% if tr in request.args.getlist('effect') %} checked="true"{% endif %}>{{tr}}</option>
-              </label>
+                <option value="{{tr}}" {% if tr in request.args.getlist('effect') %} selected="selected"{% endif %}>{{tr}}</option>
               {% endfor %}
-            </div>
+            </select>
           </div>
         </div>
 
@@ -96,6 +100,17 @@
       </div>
       <div class="pure-u-1  cardtext">{{row['text']}}</div>
     </div>
+
+    <script>
+      let opts = {
+        removeItemButton: true,
+        editItems: false,
+        duplicateItemsAllowed: false,
+        paste: false
+      };
+      const triggers = new Choices(document.getElementById("s_trigger"), opts);
+      const effects = new Choices(document.getElementById("s_effect"), opts);
+    </script>
     {% endfor%}
 
 {% endblock %}
