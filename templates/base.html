@@ -15,6 +15,32 @@
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <span>🔍</span> MagicDeepSearch
+            </a>
+        
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            </a>
+        </div>
+        
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+            <a class="navbar-item" href="/">
+                Home
+            </a>
+        
+            <a class="navbar-item" href="/search">
+                Search
+            </a>
+        
+        </div>
+    </nav>
+                
     <h1 class="title is-1">Magic Deep Search <sup class="beta">beta</sup></h1>
 
     {% block content %}
