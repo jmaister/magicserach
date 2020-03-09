@@ -7,31 +7,27 @@
     <meta name="description" content="Magic Deep Search is a search engine for Magic: The Gathering cards. The cards have been tagged using <b>Artificial Intelligence</b> so it is easier to find combos, create decks, find specific habilities, ..." />
     <title>Magic Deep Search{% block title %}{% endblock %} - magic.PaellaLabs.com</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
-<!--[if lte IE 8]>
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-old-ie-min.css">
-<![endif]-->
-<!--[if gt IE 8]><!-->
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-min.css">
-<!--<![endif]-->
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+
     {% block head %}
     {% endblock %}
 
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-    <h1>Magic Deep Search <sup class="beta">beta</sup></h1>
+    <h1 class="title is-1">Magic Deep Search <sup class="beta">beta</sup></h1>
 
     {% block content %}
-    <h1>content</h1>
+    <h1 class="title is-1">content</h1>
     {% endblock %}
 
-    <footer class="foot">
-        <p>Created by Jordi Burgos.</p>
-        <p>Send comments or suggestions:</p>
-        <p><a href="https://github.com/jmaister/">https://github.com/jmaister/</a></p>
-        <p><a href="https://twitter.com/jordimaister">Twitter: @jordimaister</a></p>
+    <footer class="footer foot">
+        <div class="content has-text-centered">
+            <p>Created by Jordi Burgos.</p>
+            <p>Send comments or suggestions:</p>
+            <p><a href="https://github.com/jmaister/">https://github.com/jmaister/</a></p>
+            <p><a href="https://twitter.com/jordimaister">Twitter: @jordimaister</a></p>
+        </div>
     </footer>
 </body>
 </html>

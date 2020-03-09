@@ -3,7 +3,7 @@
 {% block title%} - {{analysis.card['name']}}{% endblock %}
 
 {% block content %}
-    <h2>Card Analysis</h2>
+    <h2 class="title is-2">Card Analysis</h2>
 
     <div class="pure-g cardcontainer">
         <div class="pure-u-1 pure-u-md-1-3">
@@ -47,7 +47,7 @@
     {% endfor %}
     </div>
 
-    <h2>Legend</h2>
+    <h2 class="title is-2">Legend</h2>
 
     <div class="words">
         <span class="word">
@@ -62,7 +62,7 @@
     </div>
     <p>/name/: Name of the card</p>
 
-    <h2>Debug</h2>
+    <h2 class="title is-2">Debug</h2>
     <table>
     {% for k in analysis.card.keys() %}
         <tr>
@@ -72,7 +72,7 @@
     {% endfor %}
     </table>
 
-    <h2>Dependencies</h2>
+    <h2 class="title is-2">Dependencies</h2>
 
     <div class="dependencies">
         {{analysis.display_dep|safe}}

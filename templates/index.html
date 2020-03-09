@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Welcome!</h2>
+    <h2 class="title is-2">Welcome!</h2>
     <p>Magic Deep Search is a search engine for <b>Magic: The Gathering</b> cards.</p>
     <p>The cards have been tagged using <b>Artificial Intelligence</b> so it is easier to:
         <ul>
@@ -18,8 +18,8 @@
         </ul>
     </p>
 
-    <h3>Stats</h3>
-    <table class="pure-table">
+    <h3 class="title is-3">Stats</h3>
+    <table class="table">
         <tr>
             <td>Total cards in database</td>
             <td>{{stats['cards']}}</td>
@@ -40,9 +40,9 @@
 
     <p><i>Note: work is still in progress, so not all card properties or abilities have been trained.</i></p>
 
-    <a class="pure-button pure-button-primary" href="/search">Go to the Search Page</a>
+    <a class="button is-primary is-link" href="/search">Go to the Search Page</a>
 
-    <h2>Changelog</h2>    
+    <h2 class="title is-2">Changelog</h2>    
 
 <div>
     <p>2020-03-01 Recognized 45.2% of total text.</p>
