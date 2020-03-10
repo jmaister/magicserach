@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Stats / History</h2>
+    <h2 class="title is-2">Stats / History</h2>
 
-    <table class="pure-table">
+    <table class="table">
         {% for row in history %}
         <tr>
             <td>{{row["dt"]}}</td>

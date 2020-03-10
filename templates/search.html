@@ -1,101 +1,120 @@
 {% extends "base.html" %}
 
+{% block head %}
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/styles/choices.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
+{% endblock%}
+
 {% block content %}
-    <h2>Search</h2>
+    <h2 class="title is-2">Search</h2>
     <form class="pure-form pure-form-stacked" method="GET" action="/search" >
       <fieldset>
-        <label for="format">Format</label>
-        <input type="text" id="format" name="format" disabled value="Standard (More are coming...)" />
+        <label class="label" for="format">Format</label>
+        <input class="input is-static" type="text" id="format" name="format" disabled value="Standard (More are coming...)" />
 
-        <label for="cardname">Name (partial)</label>
-        <input type="text" id="cardname" name="cardname" placeholder="Card name" value="{{ request.args['cardname'] }}" />
+        <label class="label" for="cardname">Name (partial)</label>
+        <input class="input" type="text" id="cardname" name="cardname" placeholder="Card name" value="{{ request.args['cardname'] }}" />
 
-        <label for="text">Text (partial)</label>
-        <input type="text" id="text" name="text" placeholder="Card text" value="{{ request.args['text'] }}" />
+        <label class="label" for="text">Text (partial)</label>
+        <input class="input" type="text" id="text" name="text" placeholder="Card text" value="{{ request.args['text'] }}" />
 
-        <div class="pure-g card_tag_box">
-          <div class="pure-u-1-1 pure-u-md-1-2">
-            <h3>Card triggers</h3>
-            <div class="scroll">
-              {% for tr in data.triggers|sort %}
-              <label for="id_tr_{{tr}}">
-                <input id="id_tr_{{tr}}" type="checkbox" name="trigger" value="{{tr}}" {% if tr in request.args.getlist('trigger') %} checked="true"{% endif %}>{{tr}}</option>
-              </label>
-              {% endfor %}
-            </div>
-          </div>
-          <div class="pure-u-1-1 pure-u-md-1-2">
-            <h3>Card effects</h3>
-            <div class="scroll">
-              {% for tr in data.effects|sort %}
-              <label for="id_ef_{{tr}}" class="pure-checkbox">
-                <input id="id_ef_{{tr}}" type="checkbox" name="effect" value="{{tr}}" {% if tr in request.args.getlist('effect') %} checked="true"{% endif %}>{{tr}}</option>
-              </label>
-              {% endfor %}
-            </div>
-          </div>
+        <label class="label" for="s_trigger">Card triggers</label>
+        <select id="s_trigger" name="trigger" multiple="multiple">
+          {% for tr in data.triggers|sort %}
+            <option value="{{tr}}" {% if tr in request.args.getlist('trigger') %} selected="selected"{% endif %}>{{tr}}</option>
+          {% endfor %}
+        </select>
+
+        <label class="label" for="s_effect">Card effects</label>
+        <select id="s_effect" name="effect" multiple="multiple">
+          {% for tr in data.effects|sort %}
+            <option value="{{tr}}" {% if tr in request.args.getlist('effect') %} selected="selected"{% endif %}>{{tr}}</option>
+          {% endfor %}
+        </select>
+
+        <label class="label" for="s_color">Color</label>
+        <div class="select" id="s_color">
+          <select name="colormode">
+            <option value="any" {% if request.args['colormode'] == 'any' %} selected="selected"{% endif %}>Any of these colors</option>
+            <option value="all" {% if request.args['colormode'] == 'all' %} selected="selected"{% endif %}>All of these colors</option>
+          </select>
         </div>
 
         <div>
-          <h3>Color</h3>
-          <div>
-            <select name="colormode">
-              <option value="any" {% if request.args['colormode'] == 'any' %} selected="selected"{% endif %}>Any of these colors</option>
-              <option value="all" {% if request.args['colormode'] == 'all' %} selected="selected"{% endif %}>All of these colors</option>
-            </select>
-          </div>
-
           {% set colors = ['R', 'U', 'G', 'W', 'B', 'C'] %}
-          <div class="pure-g">
+          <div class="columns">
             {% for c in colors %}
-              <div class="pure-u-1-1 pure-u-sm-1-6">
-                <label for="id_color_{{c}}">
-                  <input type="checkbox" id="id_color_{{c}}" name="color_{{c}}" {% if request.args['color_'+c] == 'on' %} checked {% endif %} />
+              <div class="column">
+                <label for="id_color_{{c}}" class="checkbox">
+                  <input type="checkbox" class="checkbox" id="id_color_{{c}}" name="color_{{c}}" {% if request.args['color_'+c] == 'on' %} checked {% endif %} />
                   <img class="search_icon" src="/img/{{c}}.svg" >
                 </label>
               </div>
             {% endfor %}
           </div>
         </div>
-        <p>
-          <button class="pure-button pure-button-primary" type="submit">Search</button>
+        <p class="search-button-bar">
+          <button class="button is-primary is-medium is-fullwidth" type="submit">Search</button>
         </p>
       </fieldset>
     </form>
 
-    <h3>{{rows|length}} Results:</h3>
+    <h3 class="title is-3">{{rows|length}} Results:</h3>
+    <div class="results-container">
     {% for row in rows %}
-    <div class="pure-g result-card" id="{{row['uuid']}}">
-      <div class="pure-u-1-1 cardname">
-        <a class="pure-button" target="_blank" href="analize/{{row['uuid']}}">🔗 {{row['name']}}</a>
+      <div class="result-card" id="{{row['uuid']}}">
+        <a class="button is-link" target="_blank" href="analize/{{row['uuid']}}">🔗 {{row['name']}}</a>
+        <div class="pure-u-1-2">
+          Colors: [
+          {% if row['colors'] != None %}
+            {% set colorlist = row['colors'].split(',') %}
+            {% for c in colorlist %}
+              <img class="icon" src="img/{{c}}.svg" >
+            {% endfor %}
+          {% else %}
+            <img class="icon" src="img/C.svg" >
+          {% endif %}
+          ]
+        </div>
+        <div class="pure-u-1-2">Mana: [
+          {% if row['mana'] != "" %}
+            {% for m in row['mana'].split(',') %}
+              <img class="icon" src="/img/{{m}}.svg" >
+            {% endfor %}
+          {% else %}
+            n/a
+          {% endif %}
+          ]
+        </div>
+        <div class="pure-u-1-1">
+          {{row["labeledpct"]|round(1, 'floor')}}% ({{row["labeledwords"]}} of {{row["totalwords"]}} text tokens)
+        </div>
+        <div class="pure-u-1-1">
+            {{row['labels']}}
+        </div>
+        <div class="pure-u-1 cardtext">{{row['text']}}</div>
       </div>
-      <div class="pure-u-1-2">
-        Colors: [
-        {% if row['colors'] != None %}
-          {% set colorlist = row['colors'].split(',') %}
-          {% for c in colorlist %}
-            <img class="icon" src="img/{{c}}.svg" >
-          {% endfor %}
-        {% else %}
-          <img class="icon" src="img/C.svg" >
-        {% endif %}
-        ]
-      </div>
-      <div class="pure-u-1-2">Mana [
-        {% if row['mana'] != "" %}
-          {% for m in row['mana'].split(',') %}
-            <img class="icon" src="/img/{{m}}.svg" >
-          {% endfor %}
-        {% else %}
-          n/a
-        {% endif %}
-        ]
-      </div>
-      <div class="pure-u-1-1">
-        {{row["labeledpct"]|round(1, 'floor')}}% ({{row["labeledwords"]}} of {{row["totalwords"]}} text tokens) {{row['labels']}}
-      </div>
-      <div class="pure-u-1  cardtext">{{row['text']}}</div>
-    </div>
     {% endfor%}
+    </div>
+
+    <script>
+      let opts = {
+        removeItemButton: true,
+        editItems: false,
+        duplicateItemsAllowed: false,
+        paste: false
+      };
+      let opts2 = {
+        removeItemButton: true,
+        editItems: false,
+        duplicateItemsAllowed: false,
+        paste: false
+      };
+      const triggers = new Choices(document.getElementById("s_trigger"), opts);
+      const effects = new Choices(document.getElementById("s_effect"), opts2);
+    </script>
 
 {% endblock %}
