@@ -107,3 +107,7 @@ form.pure-form input[type="text"] {
 .title {
     margin-top: 30px;
 }
+
+ul.ulist li {
+    list-style: disc;
+}
