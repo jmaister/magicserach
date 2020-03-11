@@ -10,7 +10,7 @@
 
 {% block content %}
     <h2 class="title is-2">Search</h2>
-    <form class="pure-form pure-form-stacked" method="GET" action="/search" >
+    <form class="form" method="GET" action="/search" >
       <fieldset>
         <label class="label" for="format">Format</label>
         <input class="input is-static" type="text" id="format" name="format" disabled value="Standard (More are coming...)" />
@@ -67,7 +67,7 @@
     {% for row in rows %}
       <div class="result-card" id="{{row['uuid']}}">
         <a class="button is-link" target="_blank" href="analize/{{row['uuid']}}">🔗 {{row['name']}}</a>
-        <div class="pure-u-1-2">
+        <div>
           Colors: [
           {% if row['colors'] != None %}
             {% set colorlist = row['colors'].split(',') %}
@@ -79,7 +79,7 @@
           {% endif %}
           ]
         </div>
-        <div class="pure-u-1-2">Mana: [
+        <div>Mana: [
           {% if row['mana'] != "" %}
             {% for m in row['mana'].split(',') %}
               <img class="icon" src="/img/{{m}}.svg" >
@@ -89,13 +89,13 @@
           {% endif %}
           ]
         </div>
-        <div class="pure-u-1-1">
+        <div>
           {{row["labeledpct"]|round(1, 'floor')}}% ({{row["labeledwords"]}} of {{row["totalwords"]}} text tokens)
         </div>
-        <div class="pure-u-1-1">
+        <div>
             {{row['labels']}}
         </div>
-        <div class="pure-u-1 cardtext">{{row['text']}}</div>
+        <div class="cardtext">{{row['text']}}</div>
       </div>
     {% endfor%}
     </div>
