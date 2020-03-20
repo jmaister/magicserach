@@ -140,3 +140,66 @@ Return all cards exiled with /name/ to their owner's hand
 
 Seasonal Ritual
 Add one mana of any color
+
+# SEO
+
+## tips
+
+- Cambiar url de uuid a nombre de la carta
+- Image tag
+- .word.lemma: add white-space: nowrap;
+- robots.txt create
+
+
+## Other
+
+https://search.google.com/structured-data/testing-tool#url=https%3A%2F%2Fmagic.paellalabs.com%2Fsearch
+https://search.google.com/structured-data/testing-tool
+
+- Add "card analysis" to title
+
+## SEO open graph
+
+https://ogp.me/
+
+## one
+
+<meta property="og:site_name" content="San Roque 2014 Pollos">
+<meta property="og:title" content="San Roque 2014 Pollos" />
+<meta property="og:description" content="Programa de fiestas" />
+<meta property="og:image" itemprop="image" content="http://pollosweb.wesped.es/programa_pollos/play.png">
+<meta property="og:type" content="website" />
+<meta property="og:updated_time" content="1440432930" />
+
+
+## Complete
+
+
+https://stackoverflow.com/questions/25100917/showing-thumbnail-for-link-in-whatsapp-ogimage-meta-tag-doesnt-work
+
+<!-- MS, fb & Whatsapp -->
+
+<!-- MS Tile - for Microsoft apps-->
+<meta name="msapplication-TileImage" content="http://www.example.com/image01.jpg">    
+
+<!-- fb & Whatsapp -->
+
+<!-- Site Name, Title, and Description to be displayed -->
+<meta property="og:site_name" content="The Rock Photo Studio">
+<meta property="og:title" content="The Rock Photo Studio in Florida">
+<meta property="og:description" content="The best photo studio for your events">
+
+<!-- Image to display -->
+<!-- Replace   «example.com/image01.jpg» with your own -->
+<meta property="og:image" content="http://www.example.com/image01.jpg">
+
+<!-- No need to change anything here -->
+<meta property="og:type" content="website" />
+<meta property="og:image:type" content="image/jpeg">
+
+<!-- Size of image. Any size up to 300. Anything above 300px will not work in WhatsApp -->
+<meta property="og:image:width" content="300">
+<meta property="og:image:height" content="300">
+
+<!-- Website to visit when clicked in fb or WhatsApp-->
+<meta property="og:url" content="http://www.example.com">
