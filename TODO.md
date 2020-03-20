@@ -146,9 +146,6 @@ Add one mana of any color
 ## tips
 
 - Cambiar url de uuid a nombre de la carta
-- Image tag
-- .word.lemma: add white-space: nowrap;
-- robots.txt create
 
 
 ## Other
