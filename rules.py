@@ -430,11 +430,11 @@ def run(app, conn):
 
     conn.commit()
 
-def analize(app, conn, uuid):
+def analize(app, conn, name):
     import json
 
     cur = conn.cursor()
-    cur.execute("SELECT * FROM cards WHERE uuid = ?", [uuid])
+    cur.execute("SELECT * FROM cards WHERE name = ?", [name])
     cards = cur.fetchall()
     card = cards[0]
 
