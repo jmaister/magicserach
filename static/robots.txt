@@ -1,0 +1,4 @@
+# All allowed :)
+
+User-agent: *
+Allow: /
