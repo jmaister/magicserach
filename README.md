@@ -43,3 +43,7 @@ Mana color images "CC BY-NC-SA 2.5" from: https://mtg.gamepedia.com/Numbers_and_
 https://select2.org/
 https://select2.org/configuration/options-api
 
+## gunicorn
+
+https://docs.gunicorn.org/en/stable/settings.html
+
