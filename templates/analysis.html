@@ -1,16 +1,26 @@
 {% extends "base.html" %}
 
-{% block title%} - {{analysis.card['name']}}{% endblock %}
+{% block title%} - {{analysis.card['name']}} - Card Analysis{% endblock %}
+
+{% set i = analysis.card['scryfallId'] %}
+{% set image = "https://img.scryfall.com/cards/normal/front/" + i[0] + "/" + i[1] + "/" + i + ".jpg" %}
+
+{% block seo %}
+<meta property="og:title" content="Card analysis for '{{analysis.card['name']}}'" />
+<meta property="og:description" content="Card analysis for card '{{analysis.card['name']}}' of Magic The Gathering. The analysis is done using Natural Language Processing (NLP)." />
+<meta property="og:image" itemprop="image" content="{{image}}">
+<meta property="og:type" content="website" />
+<meta property="og:updated_time" content="{{analysis.updated_on}}" />
+{% endblock %}
 
 {% block content %}
-    <h2 class="title is-2">Card Analysis</h2>
+    <h2 class="title is-2">Card Analysis for "{{analysis.card['name']}}"</h2>
 
     <div class="cardcontainer columns">
         <div class="column is-one-thirds">
-            {% set i = analysis.card['scryfallId'] %}
             <img class="cardimage"
-                alt="Image of the card"
-                src="https://img.scryfall.com/cards/normal/front/{{i[0]}}/{{i[1]}}/{{i}}.jpg" >
+                alt="Image of the card {{analysis.card['name']}}. Magic The Gathering"
+                src="{{image}}" >
         </div>
         <div class="column  is-two-thirds">
             <div class="cardinfo">

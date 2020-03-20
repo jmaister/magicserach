@@ -501,6 +501,10 @@ def get_card_analysis(nlp, card, forDisplay):
         display_ent = displacy.render(doc, style='ent')
         display_dep = displacy.render(doc, style='dep')
 
+    # TODO: use epoch time for the moment.
+    import time
+    updated_on = int(time.time())
+    
     return {
         "card": card,
         "doc": tokens,
@@ -511,5 +515,6 @@ def get_card_analysis(nlp, card, forDisplay):
         "mana": manaStr,
         "totalwords": totalwords,
         "labeledwords": labeledwords,
-        "labeledpct": labeledpct
+        "labeledpct": labeledpct,
+        "updated_on": updated_on
     }
