@@ -8,6 +8,14 @@
 <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 {% endblock%}
 
+{% block seo %}
+<meta property="og:title" content="Magic Deep Search page" />
+<meta property="og:description" content="Search for Card analysis of Magic The Gathering. The analysis is done using Natural Language Processing (NLP)." />
+<meta property="og:image" itemprop="image" content="//favicon.ico">
+<meta property="og:type" content="website" />
+<meta property="og:updated_time" content="1584748061" />
+{% endblock %}
+
 {% block content %}
     <h2 class="title is-2">Search</h2>
     <form class="form" method="GET" action="/search" >
@@ -43,19 +51,18 @@
           </select>
         </div>
 
-        <div>
-          {% set colors = ['R', 'U', 'G', 'W', 'B', 'C'] %}
-          <div class="columns">
-            {% for c in colors %}
-              <div class="column">
-                <label for="id_color_{{c}}" class="checkbox">
-                  <input type="checkbox" class="checkbox" id="id_color_{{c}}" name="color_{{c}}" {% if request.args['color_'+c] == 'on' %} checked {% endif %} />
-                  <img class="search_icon" src="/img/{{c}}.svg" >
-                </label>
-              </div>
-            {% endfor %}
-          </div>
+        {% set colors = ['R', 'U', 'G', 'W', 'B', 'C'] %}
+        <div class="columns">
+          {% for c in colors %}
+            <div class="column">
+              <label for="id_color_{{c}}" class="checkbox">
+                <input type="checkbox" class="checkbox" id="id_color_{{c}}" name="color_{{c}}" {% if request.args['color_'+c] == 'on' %} checked {% endif %} />
+                <img class="search_icon" src="/img/{{c}}.svg" >
+              </label>
+            </div>
+          {% endfor %}
         </div>
+
         <p class="search-button-bar">
           <button class="button is-primary is-medium is-fullwidth" type="submit">Search</button>
         </p>
