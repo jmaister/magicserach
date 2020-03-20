@@ -66,7 +66,7 @@
     <div class="results-container">
     {% for row in rows %}
       <div class="result-card" id="{{row['uuid']}}">
-        <a class="button is-link" target="_blank" href="analize/{{row['uuid']}}">🔗 {{row['name']}}</a>
+        <a class="button is-link" target="_blank" href="analize/{{row['name']}}">🔗 {{row['name']}}</a>
         <div>
           Colors: [
           {% if row['colors'] != None %}

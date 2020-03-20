@@ -158,12 +158,12 @@ def setup():
     elapsed_time = time.time() - start_time
     return "OK "+ str(elapsed_time)
 
-@app.route("/analize/<uuid>")
-def analize_uuid(uuid):
+@app.route("/analize/<name>")
+def analize_uuid(name):
     conn = database.get_db(g)
-    database.save_history(request, conn, "ANALYZE", uuid)
+    database.save_history(request, conn, "ANALYZE", name)
 
-    analysis = rules.analize(app, conn, uuid)
+    analysis = rules.analize(app, conn, name)
     return render_template('analysis.html', analysis=analysis)
 
 @app.route("/history")
