@@ -8,4 +8,4 @@ export FLASK_ENV=production
 nohup flask run -h 127.0.0.1 -p 5000 --with-threads --reload >> ms.log &
 
 sleep 5
-curl https://magic.paellalabs.com/runrules
+curl 127.0.0.1:5000/runrules
