@@ -189,7 +189,7 @@ class Node:
         return hash(self.id)
 
     def __repr__(self):
-        return '{{"id": "{}"}}'.format(self.id)
+        return '{{"id": "{}", "group": {}}}'.format(self.id, self.group)
 
 @app.route("/graph")
 def graph():
@@ -199,7 +199,7 @@ def graph():
     sql = """SELECT * FROM cards AS c, cardlabels AS cl
              WHERE c.uuid = cl.uuid 
              AND cl.labels LIKE "%DRAW%"
-             AND colors = "B"
+             AND colors = "R"
              """
 
     cur.execute(sql, [])
