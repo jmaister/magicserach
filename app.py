@@ -177,6 +177,64 @@ def history():
     return render_template('history.html', history=rows)
 
 
+class Node:
+    def __init__(self, id, group):
+        self.id = id
+        self.group = group
+
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
+
+    def __repr__(self):
+        return '{{"id": "{}"}}'.format(self.id)
+
+@app.route("/graph")
+def graph():
+    conn = database.get_db(g)
+    cur = conn.cursor()
+
+    sql = """SELECT * FROM cards AS c, cardlabels AS cl
+             WHERE c.uuid = cl.uuid 
+             AND cl.labels LIKE "%DRAW%"
+             AND colors = "B"
+             """
+
+    cur.execute(sql, [])
+    rows = cur.fetchall()
+
+    nodes = set()
+    links = []
+    for row in rows:
+        cardname = row["name"]
+        cardname = cardname.replace("'", "\'")
+        nodes.add(Node(cardname, 1))
+
+        labelsStr = row["labels"]
+        if len(labelsStr) > 0:
+            labels = labelsStr.split(',')
+
+            for label in labels:
+                label = label.strip()
+
+                if label.startswith('ON_'):
+                    fromLabel = label[3:]
+                    nodes.add(Node(fromLabel, 3))
+                    links.append({"source": fromLabel, "target": cardname})
+                else:
+                    nodes.add(Node(label, 2))
+                    links.append({"source": cardname, "target": label})
+
+    graphdata = {
+        "nodes": list(nodes),
+        "links": links
+    }    
+    
+    return render_template('graph.html', graphdata=graphdata)
+
+
 if __name__ == "__main__":
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.config['TESTING'] = True

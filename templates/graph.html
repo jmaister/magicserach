@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2 class="title is-2">Card graph!</h2>
+    <p>This is a card graph. Shows which cards have sinergies.</p>
+
+    <div>
+    {{graphdata}}
+    </div>
+
+    <div id="thegraph"></div>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <style>
+        .svgdisabled {
+            pointer-events: none;
+        }
+    </style>
+
+    <script>
+
+        // https://observablehq.com/@d3/force-directed-graph
+        // https://github.com/d3/d3-force
+        
+        
+        drag = simulation => {
+          
+          function dragstarted(d) {
+            if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+          }
+          
+          function dragged(d) {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+          }
+          
+          function dragended(d) {
+            if (!d3.event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+          }
+          
+          return d3.drag()
+              .on("start", dragstarted)
+              .on("drag", dragged)
+              .on("end", dragended);
+        }
+        
+        //color = {
+          //const scale = d3.scaleOrdinal(d3.schemeCategory10);
+          //return d => scale(d.group);
+        //}
+        
+        color = d => d.group;
+        
+        width = 800
+        height = 600
+        
+        /*
+        data = {
+          nodes: [
+            {id:"aaa", group:1},
+            {id:"bbb", group:1},
+            {id:"ccc", group:1},
+            {id:"ddd", group:1},
+            {id:"eee", group:1},
+          ],
+          links: [
+            {source:"aaa", target:"bbb", value: 2},
+            {source:"bbb", target:"ccc", value: 2},
+            {source:"bbb", target:"ddd", value: 2},
+            {source:"ddd", target:"eee", value: 2},
+          ]
+        }
+        */
+        data = {{graphdata|safe}};
+        
+        radius = 10;
+        distance = radius * 8;
+        
+        chart = () => {
+          const links = data.links.map(d => Object.create(d));
+          const nodes = data.nodes.map(d => Object.create(d));
+        
+          const simulation = d3.forceSimulation(nodes)
+              .force("link", d3.forceLink(links).id(d => d.id).distance(distance))
+              .force("charge", d3.forceManyBody())
+              .force("center", d3.forceCenter(width / 2, height / 2));
+        
+          const svg = d3.select("#thegraph").append("svg")
+              .attr("viewBox", [0, 0, width, height]);
+        
+        
+        svg.append("svg:defs").selectAll("marker")
+            .data(["end"])      // Different link/path types can be defined here
+          .enter().append("svg:marker")    // This section adds in the arrows
+            .attr("id", String)
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", radius+15)
+            .attr("refY", 0)
+            .attr("markerWidth", 6)
+            .attr("markerHeight", 6)
+            .attr("orient", "auto")
+          .append("svg:path")
+            .attr("d", "M0,-5L10,0L0,5");
+        
+          const link = svg.append("g")
+              .attr("stroke", "#999")
+              .attr("stroke-opacity", 0.6)
+            .selectAll("line")
+            .data(links)
+            .join("line")
+              .attr("stroke-width", d => Math.sqrt(d.value))
+              .attr('marker-end', 'url(#end)');
+        
+        
+          const node = svg.append("g")
+              .attr("stroke", "#fff")
+              .attr("stroke-width", 1.5)
+            .selectAll("circle")
+            .data(nodes)
+            .join("circle")
+              .attr("r", radius)
+              .attr("fill", color)
+              .call(drag(simulation));
+        
+          node.append("title")
+              .text(d => d.id);
+        
+        const textElements = svg.append('g')
+          .selectAll('text')
+          .data(nodes)
+          .enter().append('text')
+            .text(node => node.id)
+            .attr('font-size', 15)
+            .attr('dx', radius)
+            .attr('dy', radius/2)
+            .attr('class', 'svgdisabled');
+        
+          simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+        
+            node
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y);
+            textElements
+                .attr("x", d => d.x)
+                .attr("y", d => d.y);
+          });
+        
+          // TODO: where invalidation comes from?
+          //invalidation.then(() => simulation.stop());
+        
+          return svg.node();
+        }
+        
+        document.addEventListener("DOMContentLoaded", function(event) { 
+          chart();
+        });
+        
+        </script>
+{% endblock %}
