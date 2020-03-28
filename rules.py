@@ -202,6 +202,7 @@ patterns = [
 
     {"label": "RIOT,A", "pattern": create_pattern("riot")},
     {"label": "RIOT,B", "pattern": create_pattern("( this creature enter the battlefield with Lyour choice of a +1/+1 counter or haste . )")},
+    {"label": "RIOT,C", "pattern": create_pattern("( Lthey enter the battlefield with Lyour choice of a +1/+1 counter or haste . )")},
 
     {"label": "FLYING,A", "pattern": create_pattern("Lflying ( this creature can not be block except by creature with fly or reach . )")},
     {"label": "FLYING,Z", "pattern": [{"LOWER": "flying"}]},
@@ -310,7 +311,28 @@ patterns = [
 
     {"label": "ON_SACRIFICE_PERMANENT,A", "pattern": create_pattern("whenever Lyou sacrifice another permanent")},
 
-    
+    {"label": "COUNTER_PUT,A", "pattern": create_pattern("put ? +1/+1 counter on each creature Lyou control")},
+    {"label": "COUNTER_PUT,B1", "pattern": create_pattern("put ? +1/+1 counter on target ? Lyou control")},
+    {"label": "COUNTER_PUT,B2", "pattern": create_pattern("put ? +1/+1 counter on target creature")},
+    {"label": "COUNTER_PUT,B3", "pattern": create_pattern("put a +1/+1 counter on up to N target creature Lyou control")},
+    {"label": "COUNTER_PUT,B4", "pattern": create_pattern("put a +1/+1 counter on each of those creature")},
+    {"label": "COUNTER_PUT,C1", "pattern": create_pattern("put ? +1/+1 counter on each of up to N target creature")},
+    {"label": "COUNTER_PUT,C2", "pattern": create_pattern("put N +1/+1 counter on up to one target creature")},
+    {"label": "COUNTER_PUT,D1", "pattern": create_pattern("/name/ enter the battlefield with ? +1/+1 counter on Lit")},
+    {"label": "COUNTER_PUT,D2", "pattern": create_pattern("/name/ enter the battlefield with a number of +1/+1 counter on Lit")},
+    {"label": "COUNTER_PUT,D3", "pattern": create_pattern("enter the battlefield with an additional +1/+1 counter on Lit")},
+    {"label": "COUNTER_PUT,D4", "pattern": create_pattern("enter with an additional +1/+1 counter on Lit")},
+    {"label": "COUNTER_PUT,E", "pattern": create_pattern("put ? +1/+1 counter on Lit")},
+    {"label": "COUNTER_PUT,F", "pattern": create_pattern("put ? +1/+1 counter on /name/")},
+    {"label": "COUNTER_PUT,H", "pattern": create_pattern("put that many +1/+1 counter on /name/")},
+    {"label": "COUNTER_PUT,I", "pattern": create_pattern("distribute ? +1/+1 counter among ? ? ? ? ? ? target creature")},
+    {"label": "COUNTER_PUT,J", "pattern": create_pattern("double the number of +1/+1 counter on each of those creature")},
+    {"label": "COUNTER_PUT,K1", "pattern": create_pattern("put ? +1/+1 counter on target land Lyou control")},
+    {"label": "COUNTER_PUT,K2", "pattern": create_pattern("put ? +1/+1 counter on up to one target noncreature land Lyou control")},
+    {"label": "COUNTER_PUT,L", "pattern": create_pattern("move ? +1/+1 counter from /name/ onto target creature")},
+     
+
+    {"label": "COUNTER_REMOVE,A", "pattern": create_pattern("remove that many +1/+1 counter from /name/")},
 
 ]
 
@@ -404,12 +426,15 @@ def clean_label(label):
 def clean_text(text, name):
     if text is not None:
         text = text.replace(name, '/name/')
-        text = text.replace("/name/.", "/name/ .")
         # Fix names that contain comma and can be reference as both
         # i.e. "Roalesk, Apex Hybrid"
         if name.find(",") > 0:
             shortname = name[0:name.find(",")]
             text = text.replace(shortname, '/name/')
+
+        # Fix name at the end of phrase
+        text = text.replace("/name/.", "/name/ .")
+
         # Remove dash
         text = text.replace('—', ' - ')
 
@@ -465,6 +490,7 @@ def get_card_analysis(nlp, card, forDisplay):
     t = ""
     if card['text'] is not None:
         t = clean_text(card['text'], name)
+
     doc = nlp(t)
 
     # print([(ent.text, ent.label_) for ent in doc.ents])

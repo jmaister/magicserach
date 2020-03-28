@@ -88,6 +88,7 @@ Polukranos, Unchained
 ## Counter spell (25)
 
 Counter target spell
+Counter that spell
 
 ## Destroy (105)
 
@@ -141,6 +142,18 @@ Add one mana of any color
 ## Copy (24)
 
 create a token that's a copy of /name/ .
+
+## Block
+
+That creature can't be blocked this turn.
+
+## Adventure (6)
+
+Whenever you cast a creature spell that has an Adventure
+
+## Mentor (13)
+
+Mentor (Whenever this creature attacks, put a +1/+1 counter on target attacking creature with lesser power.)
 
 
 # SEO
