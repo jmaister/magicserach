@@ -69,7 +69,7 @@
       </fieldset>
     </form>
 
-    <h3 class="title is-3">{{rows|length}} Results:</h3>
+    <h3 class="title is-3">{{rows|length}} cards match your filters:</h3>
     <div class="results-container">
     {% for row in rows %}
       <div class="result-card" id="{{row['uuid']}}">
@@ -95,6 +95,9 @@
             n/a
           {% endif %}
           ]
+        </div>
+        <div>
+          [{{row["setCode"]}}] {{row["type"]}}
         </div>
         <div>
           {{row["labeledpct"]|round(1, 'floor')}}% ({{row["labeledwords"]}} of {{row["totalwords"]}} text tokens)

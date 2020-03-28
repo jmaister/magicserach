@@ -97,9 +97,6 @@ Destroy target creature
 Destroy target artifact
 Destroy target land
 
-# Exile (190)
-
-Exile target card from a graveyard
 
 ## Pay more mana (76)
 
@@ -140,6 +137,11 @@ Return all cards exiled with /name/ to their owner's hand
 
 Seasonal Ritual
 Add one mana of any color
+
+## Copy (24)
+
+create a token that's a copy of /name/ .
+
 
 # SEO
 

@@ -89,6 +89,7 @@ patterns = [
     {"label": "DAMAGE_CREATURE,A", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "target"}, {"LEMMA": "creature"}] },
     {"label": "DAMAGE_CREATURE,B", "pattern": [{"LEMMA": "deal"}, {"LIKE_NUM": True}, {"LEMMA": "damage"}, {"LEMMA": "to"}, {"LEMMA": "each"}, {"LEMMA": "other"}, {"LEMMA": "creature"}] },
     {"label": "DAMAGE_CREATURE,C", "pattern": create_pattern("/name/ deal ? ? damage to target creature") },
+    {"label": "DAMAGE_CREATURE,D", "pattern": create_pattern("deal damage equal to Lits power to target creature") },
 
     {"label": "ON_LIFE_GAIN,A", "pattern": [{"LEMMA": "whenever"}, {"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "life"}]},
     {"label": "ON_LIFE_GAIN,B", "pattern": [{"LEMMA": "when"}, {"LOWER": "you"}, {"LEMMA": "gain"}, {"LEMMA": "life"}]},
@@ -100,6 +101,7 @@ patterns = [
     {"label": "LIFE_LOSE_OWN,B", "pattern": [{"LOWER": "you"}, {"LEMMA": "lose"}, {"LEMMA": "x"}, {"LEMMA": "life"}]},
     {"label": "LIFE_LOSE_OPPONENT,A", "pattern": [{"LEMMA": "each"}, {"LEMMA": "opponent"}, {"LEMMA": "lose"}, {"LIKE_NUM": True}, {"LEMMA": "life"}]},
     {"label": "LIFE_LOSE_OPPONENT,B", "pattern": [{"LEMMA": "each"}, {"LEMMA": "opponent"}, {"LEMMA": "lose"}, {"LEMMA": "x"}, {"LEMMA": "life"}]},
+    {"label": "LIFE_LOSE_TARGET_PLAYER,A", "pattern": create_pattern("any number of target player each lose N life")},
 
     {"label": "LIFE_PAY,A", "pattern": create_pattern("pay N life")},
 
@@ -300,6 +302,15 @@ patterns = [
     {"label": "ESCAPE,A", "pattern": create_pattern("Lescape - ? ? ? ? , Lexile N other card from Lyour graveyard . ( Lyou may cast this card from Lyour graveyard for Lits escape cost . )")},
     {"label": "ESCAPE,B", "pattern": create_pattern("( Lyou may cast ? ? from Lyour graveyard for ? escape cost . )")},
     {"label": "ESCAPE,C", "pattern": create_pattern("Lescape - ? ? ? ? ? , Lexile N other card from Lyour graveyard")},
+
+    {"label": "SACRIFICE_AS_COST,A", "pattern": create_pattern("as an additional cost to cast this spell , sacrifice a creature .")},
+    {"label": "SACRIFICE_AS_COST,B", "pattern": create_pattern("Lsacrifice N other creature")},
+
+    {"label": "SACRIFICE_CREATURE,A", "pattern": create_pattern("sacrifice a creature")},
+
+    {"label": "ON_SACRIFICE_PERMANENT,A", "pattern": create_pattern("whenever Lyou sacrifice another permanent")},
+
+    
 
 ]
 
