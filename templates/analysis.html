@@ -2,13 +2,10 @@
 
 {% block title%} - {{analysis.card['name']}} - Card Analysis{% endblock %}
 
-{% set i = analysis.card['scryfallId'] %}
-{% set image = "https://img.scryfall.com/cards/normal/front/" + i[0] + "/" + i[1] + "/" + i + ".jpg" %}
-
 {% block seo %}
 <meta property="og:title" content="Card analysis for '{{analysis.card['name']}}'" />
 <meta property="og:description" content="Card analysis for card '{{analysis.card['name']}}' of Magic The Gathering. The analysis is done using Natural Language Processing (NLP)." />
-<meta property="og:image" itemprop="image" content="{{image}}">
+<meta property="og:image" itemprop="image" content="{{analysis.image_url_normal}}">
 <meta property="og:type" content="website" />
 <meta property="og:updated_time" content="{{analysis.updated_on}}" />
 {% endblock %}
@@ -19,8 +16,8 @@
     <div class="cardcontainer columns">
         <div class="column is-one-thirds">
             <img class="cardimage"
-                alt="Image of the card {{analysis.card['name']}}. Magic The Gathering"
-                src="{{image}}" >
+                alt="Image of the card {{analysis.card['name']}} from Magic The Gathering"
+                src="{{analysis.image_url_normal}}" >
         </div>
         <div class="column  is-two-thirds">
             <div class="cardinfo">
@@ -42,7 +39,7 @@
         </div>
     </div>
     
-    <p>Scroll to see all tokens -></p>
+    <p><b>Scroll to see all tokens --></b></p>
     <div class="words">
     {% for t in analysis.doc %}
         <span class="word">

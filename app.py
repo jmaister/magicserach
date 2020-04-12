@@ -101,9 +101,9 @@ def get_search():
                     sql += "1=0"
                 sql += ")"
 
-    #sql += " ORDER BY name "
+    sql += " ORDER BY name "
     # DEBUG
-    sql += " ORDER BY labeledpct ASC "
+    # sql += " ORDER BY labeledpct, name ASC "
 
     app.logger.info("sql: [%s]", sql)
     app.logger.info("params: [%s]", params)
@@ -116,6 +116,8 @@ def get_search():
         "triggers": rules.get_trigger_labels(),
         "effects": rules.get_effect_labels()
     }
+
+    cur.close()
     conn.close()
 
     return render_template('search.html', rows=rows, data=data)
@@ -154,7 +156,6 @@ def setup():
     ) """)
     conn.close()
 
-
     elapsed_time = time.time() - start_time
     return "OK "+ str(elapsed_time)
 
@@ -164,6 +165,9 @@ def analize_uuid(name):
     database.save_history(request, conn, "ANALYZE", name)
 
     analysis = rules.analize(app, conn, name)
+
+    conn.close()
+
     return render_template('analysis.html', analysis=analysis)
 
 @app.route("/history")

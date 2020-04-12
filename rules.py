@@ -1,4 +1,5 @@
 import re
+import time
 
 import spacy
 from spacy import displacy
@@ -364,58 +365,47 @@ def get_pattern(label):
             return pattern
     return None
 
-def get_num_tokens(pattern):
-    nums = []
-    for counter, token in enumerate(pattern["pattern"]):
-        if "LIKE_NUM" in token and token["LIKE_NUM"]:
-            nums.append(counter)
-    return nums
-
-def to_integer(t):
-    try:
-        return int(t)
-    except:
-        if t == 'a' or t == 'one':
-            return 1
-        if t == 'two':
-            return 2
-        if t == 'three':
-            return 3
-        if t == 'four':
-            return 4
-        if t == 'five':
-            return 5
-        if t == 'six':
-            return 6
-        if t == 'seven':
-            return 7
-        if t == 'eight':
-            return 8
-        if t == 'nine':
-            return 9
-        if t == 'ten':
-            return 10
-        
-        return t
-
 def create_table(conn):
+
+    conn.execute("""DROP INDEX IF EXISTS idx_name_scryid""")
+    conn.execute("""CREATE INDEX AllPrintings.idx_name_scryid ON cards (name, scryfallId)""")
+    conn.execute("""DROP INDEX IF EXISTS idx_uuid""")
+    conn.execute("""CREATE INDEX AllPrintings.idx_uuid ON cards (uuid)""")
+
     conn.execute("""DROP TABLE IF EXISTS cardlabels""")
     conn.execute("""CREATE TABLE cardlabels (
         uuid TEXT,
+        name TEXT,
         labels TEXT,
         all_labels TEXT,
         mana TEXT,
         totalwords INTEGER,
         labeledwords INTEGER,
         labeledpct REAL,
+        updated_on TIMESTAMP,
+        image_url_large TEXT,
+        image_url_normal TEXT,
+        image_url_small TEXT,
+        scryfallId TEXT,
         PRIMARY KEY(`uuid`)
     ) """)
 
 def insert(conn, uuid, analysis):
-    conn.execute("""
-    INSERT INTO cardlabels (uuid, labels, all_labels, mana, totalwords, labeledwords, labeledpct)
-    VALUES (?,?,?,?,?,?,?)
-    """, [uuid, analysis["labels"], analysis["all_labels"], analysis["mana"], analysis["totalwords"], analysis["labeledwords"], analysis["labeledpct"] ])
+
+    fields = ["name", "labels", "all_labels", "mana", "totalwords", "labeledwords", "labeledpct", "updated_on",
+              "image_url_large", "image_url_normal", "image_url_small", "scryfallId"]
+
+    fieldnames = "uuid"
+    placeholders = "?"
+    params = [uuid]
+    for f in fields:
+        fieldnames += "," + f
+        placeholders += ",?"
+        params.append(analysis[f])
+
+    sql = "INSERT INTO cardlabels (" + fieldnames + ") VALUES (" + placeholders + ")"
+
+    conn.execute(sql, params)
 
 def clean_label(label):
     pos = label.find(',')
@@ -442,6 +432,7 @@ def clean_text(text, name):
 
 
 def run(app, conn):
+    # TODO: save data in batches to speed up the process
     import json
 
     with open("StandardCards.json") as datafile:
@@ -451,26 +442,30 @@ def run(app, conn):
 
     nlp = create_nlp()
 
-    ## TODO: MAKE SQL IN BATCHES
-    data_to_save = []
-
     cur = conn.cursor()
+    savecur = conn.cursor()
 
     for cardKey in list(data.keys()):
         card = data[cardKey]
-        if 'text' in card:
-            analysis = get_card_analysis(nlp, card, False)
-            insert(cur, card["uuid"], analysis)
-        else:
-            insert(cur, card["uuid"], analysis)
+        uuid = card["uuid"]
 
+        cur.execute("""SELECT scryfallId FROM cards WHERE uuid=?""", [uuid])
+        scid = cur.fetchall()[0]['scryfallId']
+
+        card["scryfallId"] = scid
+
+        analysis = get_card_analysis(nlp, card, False)
+        insert(cur, uuid, analysis)
+
+    cur.close()
+    savecur.close()
     conn.commit()
 
 def analize(app, conn, name):
     import json
 
     cur = conn.cursor()
-    cur.execute("SELECT * FROM cards WHERE name = ?", [name])
+    cur.execute("SELECT c.* FROM cards c, cardlabels cl WHERE c.uuid = cl.uuid and cl.name = ?", [name])
     cards = cur.fetchall()
     card = cards[0]
 
@@ -488,8 +483,11 @@ def create_nlp():
 def get_card_analysis(nlp, card, forDisplay):
     name = card['name']
     t = ""
-    if card['text'] is not None:
+
+    try:
         t = clean_text(card['text'], name)
+    except:
+        t = ""
 
     doc = nlp(t)
 
@@ -538,10 +536,17 @@ def get_card_analysis(nlp, card, forDisplay):
         display_ent = displacy.render(doc, style='ent')
         display_dep = displacy.render(doc, style='dep')
 
-    # TODO: use epoch time for the moment.
-    import time
+    # Update time
     updated_on = int(time.time())
-    
+
+    # Card images
+    #{% set i = analysis.card['scryfallId'] %}
+    #{% set image = "https://img.scryfall.com/cards/normal/front/" + i[0] + "/" + i[1] + "/" + i + ".jpg" %}
+    sfid = card['scryfallId']
+    image_url_large = "https://img.scryfall.com/cards/large/front/" + sfid[0] + "/" + sfid[1] + "/" + sfid + ".jpg"
+    image_url_normal = "https://img.scryfall.com/cards/normal/front/" + sfid[0] + "/" + sfid[1] + "/" + sfid + ".jpg"
+    image_url_small = "https://img.scryfall.com/cards/small/front/" + sfid[0] + "/" + sfid[1] + "/" + sfid + ".jpg"
+
     return {
         "card": card,
         "doc": tokens,
@@ -553,5 +558,10 @@ def get_card_analysis(nlp, card, forDisplay):
         "totalwords": totalwords,
         "labeledwords": labeledwords,
         "labeledpct": labeledpct,
-        "updated_on": updated_on
+        "updated_on": updated_on,
+        "scryfallId": card['scryfallId'],
+        "image_url_large": image_url_large,
+        "image_url_normal": image_url_normal,
+        "image_url_small": image_url_small,
+        "name": card['name']
     }
